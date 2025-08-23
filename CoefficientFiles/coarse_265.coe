@@ -2,7 +2,7 @@
 ; 9 address bits, outputs 256 bits
 
 memory_initialization_radix=16;
-memory_initialisation_vector= 
+memory_initialization_vector= 
 0,
 84047528a760e2d12feb36f1dbaf0cec9bc40c2c9e6ac450fc10d24f545fd85d,
 24502868159d6ec42125325370f5c78179b1d75e366e6dd0dba1731f050e371d,

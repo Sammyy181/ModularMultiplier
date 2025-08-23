@@ -25,7 +25,7 @@ def generate_bits(length=256, output_file = "", power=256):
     
     lines.append(f'; file to store modulus of (2^({power})*P) mod M')
     lines.append('memory_initialization_radix=16;')
-    lines.append('memory_initialisation_vector=')
+    lines.append('memory_initialization_vector=')
     
     for P in range(128):
         prod = P * (2**power)
