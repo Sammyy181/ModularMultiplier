@@ -3,4 +3,9 @@
 
 Prototyping and Testing done on a Nexys4 DDR FPGA board (Artix-7 FPGA).
 
-Q <- (X.Y) mod M
+The overall operation that we are aiming for is:
+
+$$
+Q \leftarrow X \cdot Y \pmod{M}
+$$
+
