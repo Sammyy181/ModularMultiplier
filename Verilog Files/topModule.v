@@ -31,14 +31,15 @@ module topModule(
     );
 
 	// Pre-Computed moduli storage
-	localparam [255:0] MODULI [2:0] = {
-		256'h92e5c273477d21d8361651a6eea3cb5b1c424d77f1b750a99cc6df2b0ee713a2,
-		256'hc56ce43b644eaeb5d6bd39635f168bc7e83d30b2bec503941e239b49273483a0,
-		256'h01c4a9ab1122c444ac8e846947958353d241fce4c5e67cd7522eda3380d35a12
-	}
+	localparam [255:0] MOD0 = 256'h92e5c273477d21d8361651a6eea3cb5b1c424d77f1b750a99cc6df2b0ee713a2;
+	localparam [255:0] MOD1 = 256'hc56ce43b644eaeb5d6bd39635f168bc7e83d30b2bec503941e239b49273483a0;
+	localparam [255:0] MOD2 = 256'h01c4a9ab1122c444ac8e846947958353d241fce4c5e67cd7522eda3380d35a12;
+		
 	reg [1:0] selMod;
 	wire [255:0] C;
-	assign C = MODULI[selMod];
+	assign C = (selMod == 2'b00) ? MOD0 :
+			   (selMod == 2'b01) ? MOD1 :
+			   (selMod == 2'b10) ? MOD2 : 256'b0;	
     
     // Karatsuba Multiplier inputs and outputs
     wire [255:0] x, y;
@@ -89,7 +90,7 @@ module topModule(
     
     
     // Get Karatsuba multiplier inputs
-    assign y = init_mult? C : Y; 
+    assign y = init_mult? Y : C; 
     assign x = fold_level[1]? (fold_level[0]? fold_3 : fold_2) : (fold_level[0]? fold_1 : X); 
     
     // Selection for Register input
@@ -127,14 +128,19 @@ module topModule(
     reg [1:0] counter;
     
     parameter IDLE = 5'b0, MULT1 = 5'b1, WAIT1 = 5'b10, FOLD1 = 5'b11 ,STORE1 = 5'b100, WAIT2 = 5'b101, FOLD2 = 5'b110, STORE2 = 5'b111, WAIT3 = 5'b1000, WAIT4 = 5'b1001, FOLD3 = 5'b1010, STORE3 = 5'b1011, WAIT5 = 5'b1100;
-    parameter COARSEGRAINLOAD = 5'b1101, COARSEGRAINWAIT = 5'b1110, COARSEGRAIN = 5'b1111, FINEGRAIN1 = 5'b10000, DONE = 5'b10001;
+    parameter COARSEGRAINLOAD = 5'b1101, COARSEGRAINWAIT = 5'b1110, COARSEGRAIN = 5'b1111, FINEGRAIN = 5'b10000, DONE = 5'b10001;
     
     always @(posedge clk) begin
+    	if (rst) begin
+    		rst_mult <= 1'b1;
+    		done <= 1'b0;
+    		Q <= 256'b0;
+    		state <= IDLE;
+    	end
     	case(state)
     		IDLE: begin
     			rst_mult <= 1'b0;
     			counter <= 1'b0;
-    			sel_A <= 1'b0;
     			coarseGrainSum <= 259'b0;
 				en_CGSBRAM <= 1'b0;
     			start_mult <= 1'b0;
@@ -142,19 +148,12 @@ module topModule(
     			selReg <= 2'b0;
 				selMod <= 2'b0;
     			foldOut <= 290'b0;
-    			BRAM_sel <= 2'b0;
     			coarseGrainSum <= 259'b0;
     			enA_BRAM2 <= 1'b0;
 				fold_level <= 2'b00;
 				init_mult <= 1'b1;
-    			
-    			
-    			if (rst) begin 
-					rst_mult <= 1'b1;
-					done <= 1'b0;
-					Q <= 256'b0;
-				end
-    			else if(start & !done) state <= MULT1;
+				
+    			if(start & !done) state <= MULT1;
 			end
 			
 			MULT1: begin
@@ -236,6 +235,7 @@ module topModule(
 				end	
 			end	
 			
+			// Correctly Functional Until Here
 			COARSEGRAINLOAD: begin
 				addr_BRAM283 <= foldOut[289:283];
 				addr_BRAM274 <= foldOut[282:274];

@@ -12,6 +12,7 @@ class ModularMultiplier():
     def mult(self, x, y):
         self.P0 = x*y
         #print(f"Length of P0 - {len(bin(self.P0)) - 2}")
+        #print(f"Multiplication value - {hex(self.P0)}")
         
     def get_parts(self, P, Plen, L=0):
         binP = bin(P)[2:]
@@ -31,12 +32,15 @@ class ModularMultiplier():
         P0_H, P0_L = self.get_parts(P=self.P0, Plen=512, L=128)
         
         C0 = (2**384) % self.modulus
+        #print(f"C0 - {hex(C0)}")
         C0PH = C0 * P0_H
+        #print(f"C0 * PH = {hex(C0PH)[2:]}")
+        #print(f"storeLSB value - {hex(P0_L)[2:]}")
         #print(f"In first folding, bit length of C0 * P0_H is {len(bin(C0PH)) - 2}")
         
         self.P1 = C0PH + P0_L
-        print(f"Value after first folding - {self.P1}")
-        #print(f"Length of P1 - {len(bin(self.P1)) - 2}")
+        #print(f"Value after first folding - {hex(self.P1)}")
+        #print(f"Length of P1 - {len(hex(self.P1)) - 2}")
     
     def folding2(self):
         P1H, P1L = self.get_parts(P=self.P1, Plen=385, L=65)
@@ -63,6 +67,7 @@ class ModularMultiplier():
         self.P3 = int(binP3, 2)
 
         #print(f"Length of P3 - {len(bin(self.P3)) - 2}")
+        print(f"Value after third folding - {hex(self.P3)}")
 
     
     def coarse_grain(self):
@@ -135,7 +140,9 @@ def main():
     X = random.getrandbits(256)
     Y = random.getrandbits(256)
     
-    print(f"Values\nX: {X}\nY: {Y}")
+    #print(f"Values\nX: {X}\nY: {Y}")
+    print(f"X in hex: {hex(X)}")
+    print(f"Y in hex: {hex(Y)}")
     calculated_mod = (X*Y) % modulus
     calculated_mod = hex(calculated_mod)
     print(f"Theoretical Q = {calculated_mod}")
