@@ -29,6 +29,17 @@ module topModule(
 	output reg [255:0] Q,
 	output reg done
     );
+
+	// Pre-Computed moduli storage
+	localparam [255:0] MOD0 = 256'h92e5c273477d21d8361651a6eea3cb5b1c424d77f1b750a99cc6df2b0ee713a2;
+	localparam [255:0] MOD1 = 256'hc56ce43b644eaeb5d6bd39635f168bc7e83d30b2bec503941e239b49273483a0;
+	localparam [255:0] MOD2 = 256'h01c4a9ab1122c444ac8e846947958353d241fce4c5e67cd7522eda3380d35a12;
+		
+	reg [1:0] selMod;
+	wire [255:0] C;
+	assign C = (selMod == 2'b00) ? MOD0 :
+			   (selMod == 2'b01) ? MOD1 :
+			   (selMod == 2'b10) ? MOD2 : 256'b0;	
     
     // Karatsuba Multiplier inputs and outputs
     wire [255:0] x, y;
@@ -41,12 +52,16 @@ module topModule(
     reg init_mult;
     reg [1:0] fold_level;
     
-    // Big BRAM Inputs and Outputs
-    reg enA_BRAM1;
-    reg [10:0] addr_BRAM1;
-    wire [255:0] doutA_BRAM1;
+    // Coarse Grain Reduction BRAM inputs and outputs
+    reg en_CGSBRAM;
+    reg [8:0] addr_BRAM256, addr_BRAM265, addr_BRAM274;
+	reg [6:0] addr_BRAM283;
+    wire [255:0] doutA_BRAM256, doutA_BRAM265, doutA_BRAM274, doutA_BRAM283;
     
-    blk_mem_gen_0 BRAM1(.clka(clk),.ena(enA_BRAM1),.wea(1'b0),.addra(addr_BRAM1),.dina(256'b0),.douta(doutA_BRAM1));
+    blk_mem_gen_0 BRAM256 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM256),.dina(256'b0),.douta(doutA_BRAM256));
+	blk_mem_gen_2 BRAM265 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM265),.dina(256'b0),.douta(doutA_BRAM256));
+	blk_mem_gen_3 BRAM274 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM274),.dina(256'b0),.douta(doutA_BRAM274));
+	blk_mem_gen_4 BRAM283 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM283),.dina(256'b0),.douta(doutA_BRAM283));
     
     // Karatsuba Submodule
     karatsuba K1(.clk(clk),.A(x),.B(y),.rst(rst_mult),.start(start_mult),.P(prod),.done(done_mult));
@@ -75,7 +90,7 @@ module topModule(
     
     
     // Get Karatsuba multiplier inputs
-    assign y = init_mult? doutA_BRAM1 : Y; 
+    assign y = init_mult? Y : C; 
     assign x = fold_level[1]? (fold_level[0]? fold_3 : fold_2) : (fold_level[0]? fold_1 : X); 
     
     // Selection for Register input
@@ -85,15 +100,9 @@ module topModule(
     // 290-bit output of Folding stages stored in sumFold3
     // Coarse Grain Reduction
     
-    reg [1:0] BRAM_sel;
-    wire [258:0] A;
-    reg sel_A;
-    
-    wire [258:0] CGS;
+	wire [258:0] CGS;
+	assign CGS = foldOut[255:0] + doutA_BRAM256 + doutA_BRAM265 + doutA_BRAM274 + doutA_BRAM283;
     reg [258:0] coarseGrainSum;
-    
-    assign A[258:0] = sel_A? coarseGrainSum[258:0] : {3'b0, sumFold3[289:34]};
-    assign CGS[258:0] = A[258:0] + {3'b0, doutA_BRAM1};
      
     // Fine Grain Reduction
     
@@ -118,52 +127,46 @@ module topModule(
     reg [4:0] state;
     reg [1:0] counter;
     
-    parameter IDLE = 5'b0, LOAD1 = 5'b1, MULT1 = 5'b10, WAIT1 = 5'b11, FOLD1 = 5'b100 ,STORE1 = 5'b101, FOLD2 = 5'b110, STORE2 = 5'b111, WAIT2 = 5'b1000, FOLD3 = 5'b1001, STORE3 = 5'b1010, WAIT3 = 5'b1011, COARSEGRAIN = 5'b1100;
-    parameter COARSEGRAINWAIT1 = 5'b1101, COARSEGRAIN2 = 5'b1110, COARSEGRAIN3 = 5'b1111, COARSEGRAIN4 = 5'b10000, FINEGRAIN1 = 5'b10001, DONE = 5'b10010;
+    parameter IDLE = 5'b0, MULT1 = 5'b1, WAIT1 = 5'b10, FOLD1 = 5'b11 ,STORE1 = 5'b100, WAIT2 = 5'b101, FOLD2 = 5'b110, STORE2 = 5'b111, WAIT3 = 5'b1000, WAIT4 = 5'b1001, FOLD3 = 5'b1010, STORE3 = 5'b1011, WAIT5 = 5'b1100;
+    parameter COARSEGRAINLOAD = 5'b1101, COARSEGRAINWAIT = 5'b1110, COARSEGRAIN = 5'b1111, FINEGRAIN = 5'b10000, DONE = 5'b10001;
     
     always @(posedge clk) begin
+    	if (rst) begin
+    		rst_mult <= 1'b1;
+    		done <= 1'b0;
+    		Q <= 256'b0;
+    		state <= IDLE;
+    	end
     	case(state)
     		IDLE: begin
-    			rst_mult <= 1'b1;
+    			rst_mult <= 1'b0;
     			counter <= 1'b0;
-    			sel_A <= 1'b0;
     			coarseGrainSum <= 259'b0;
-    			enA_BRAM1 <= 1'b0;
+				en_CGSBRAM <= 1'b0;
     			start_mult <= 1'b0;
     			storeLSB <= 384'b0;
     			selReg <= 2'b0;
+				selMod <= 2'b0;
     			foldOut <= 290'b0;
-    			BRAM_sel <= 2'b0;
     			coarseGrainSum <= 259'b0;
     			enA_BRAM2 <= 1'b0;
-    			
-    			
-    			if (rst) begin 
-					done <= 1'b0;
-					Q <= 256'b0;
-				end
-    			else if(start) state <= LOAD1;
-			end
-			
-			LOAD1: begin
-				rst_mult <= 1'b0;
 				fold_level <= 2'b00;
 				init_mult <= 1'b1;
-				state <= MULT1;
+				
+    			if(start & !done) state <= MULT1;
 			end
 			
 			MULT1: begin
 				start_mult <= 1'b1;
 				selReg <= 2'b00;
-				enA_BRAM1 <= 1'b1;
 				state <= WAIT1;
 			end	
 			
 			WAIT1: begin
 				start_mult <= 1'b0;
-				addr_BRAM1 <= 11'd1664; 
 				if(done_mult) begin
 					init_mult <= 1'b0;
+					selMod <= 2'b0;
 					storeLSB <= dataStoreSel;
 					fold_level <= 2'b01;
 					state <= FOLD1;
@@ -178,16 +181,14 @@ module topModule(
 			
 			STORE1: begin
 				start_mult <= 1'b0;
-				addr_BRAM1 <= 11'd1665;
 				if(done_mult) begin
-					counter[0] <= ~counter[0];
-				end
-				if(counter[0]) begin
-					counter[0] <= 1'b0;
+					selMod <= 2'b01;
 					fold_level <= 2'b10;
-					state <= FOLD2;
+					state <= WAIT2;
 				end					
 			end
+
+			WAIT2: state <= FOLD2;
 			
 			FOLD2: begin
 				start_mult <= 1'b1;
@@ -196,22 +197,20 @@ module topModule(
 			
 			STORE2: begin
 				start_mult <= 1'b0;
-				addr_BRAM1 <= 11'd1666;
 				storeLSB <= dataStoreSel;
-				state <= WAIT2;
+				state <= WAIT3;
 			end	
 			
-			WAIT2: begin
+			WAIT3: begin
 				selReg <= 2'b10;
 				if(done_mult) begin
-					counter[0] <= ~counter[0];
-				end
-				if(counter[0]) begin
-					counter[0] <= 1'b0;
+					selMod <= 2'b10;
 					fold_level <= 2'b11;
-					state <= FOLD3;
+					state <= WAIT4;
 				end
 			end
+
+			WAIT4: state <= FOLD3;
 			
 			FOLD3: begin
 				start_mult <= 1'b1;
@@ -221,71 +220,49 @@ module topModule(
 			STORE3: begin
 				start_mult <= 1'b0;
 				storeLSB <= dataStoreSel;
-				state <= WAIT3;
+				state <= WAIT5;
 			end	
 			
-			WAIT3: begin
+			WAIT5: begin
 				if(done_mult) begin
 					counter[0] <= ~counter[0];
 				end
 				if(counter[0]) begin
 					counter[0] <= 1'b0;
 					foldOut <= sumFold3;
-					state <= COARSEGRAIN;
+					en_CGSBRAM <= 1'b1;
+					state <= COARSEGRAINLOAD;
 				end	
 			end	
+			
+			// Correctly Functional Until Here
+			COARSEGRAINLOAD: begin
+				addr_BRAM283 <= foldOut[289:283];
+				addr_BRAM274 <= foldOut[282:274];
+				addr_BRAM265 <= foldOut[273:265];
+				addr_BRAM256 <= foldOut[264:256];
+				state <= COARSEGRAINWAIT;
+			end
+			
+			COARSEGRAINWAIT: begin
+				// Wait for two clocks for the BRAM data to load
+				counter <= counter + 1'b1;
+				if(counter == 2'b10) begin
+					counter <= 2'b0;
+					en_CGSBRAM <= 1'b0;
+					enA_BRAM2 <= 1'b1;
+					state <= COARSEGRAIN;
+				end
+			end
 			
 			COARSEGRAIN: begin
-				addr_BRAM1 <= {4'b1100, foldOut[289:283]};
-				sel_A <= 1'b0;
-				state <= COARSEGRAINWAIT1;
+				coarseGrainSum <= CGS;
+				state <= FINEGRAIN;
 			end
 			
-			COARSEGRAINWAIT1: begin
-				counter <= counter + 1'b1;
-				if(&counter) begin
-					coarseGrainSum <= CGS;
-					addr_BRAM1 <= {2'b10, foldOut[282:274]};
-					counter <= 2'b0;
-					sel_A <= 1'b1;
-					state <= COARSEGRAIN2;
-				end
-			end
-			
-			COARSEGRAIN2: begin
-				counter <= counter + 1'b1;
-				if (&counter) begin
-					coarseGrainSum <= CGS;
-					addr_BRAM1 <= {2'b01, foldOut[273:265]};
-					counter <= 2'b0;
-					state <= COARSEGRAIN3;
-				end
-			end
-			
-			COARSEGRAIN3: begin
-				counter <= counter + 1'b1;
-				if (&counter) begin
-					coarseGrainSum <= CGS;
-					addr_BRAM1 <= {2'b00, foldOut[264:256]};
-					counter <= 2'b0;
-					state <= COARSEGRAIN4;
-				end	
-			end	
-			
-			COARSEGRAIN4: begin
-				counter <= counter + 1;
-				if (&counter) begin
-					enA_BRAM1 <= 1'b0;
-					coarseGrainSum <= CGS;
-					counter <= 2'b0;
-					state <= FINEGRAIN1;
-				end	
-			end
-			
-			FINEGRAIN1: begin
-				enA_BRAM2 <= 1'b1;
-				counter <= counter + 1;
-				if(&counter) begin
+			FINEGRAIN: begin
+				counter[0] <= ~counter[0];
+				if(counter[0]) begin
 					enA_BRAM2 <= 1'b0;
 					counter <= 0;
 					Q <= (Q2 < 0)? Q1 : Q2;
