@@ -59,7 +59,7 @@ module topModule(
     wire [255:0] doutA_BRAM256, doutA_BRAM265, doutA_BRAM274, doutA_BRAM283;
     
     blk_mem_gen_0 BRAM256 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM256),.dina(256'b0),.douta(doutA_BRAM256));
-	blk_mem_gen_2 BRAM265 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM265),.dina(256'b0),.douta(doutA_BRAM256));
+	blk_mem_gen_2 BRAM265 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM265),.dina(256'b0),.douta(doutA_BRAM265));
 	blk_mem_gen_3 BRAM274 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM274),.dina(256'b0),.douta(doutA_BRAM274));
 	blk_mem_gen_4 BRAM283 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM283),.dina(256'b0),.douta(doutA_BRAM283));
     
@@ -119,7 +119,8 @@ module topModule(
     
     fineGrainMap FGM(.fineGrainAddr(fineGrainAddr),.addr_BRAM2a(addr_BRAM2a),.addr_BRAM2b(addr_BRAM2b));
     
-    wire [256:0] Q1, Q2;
+    wire [255:0] Q1;
+    wire [256:0] Q2;
     assign Q1 = coarseGrainSum - doutA_BRAM2a;
     assign Q2 = coarseGrainSum - doutA_BRAM2b;
     
@@ -128,7 +129,7 @@ module topModule(
     reg [1:0] counter;
     
     parameter IDLE = 5'b0, MULT1 = 5'b1, WAIT1 = 5'b10, FOLD1 = 5'b11 ,STORE1 = 5'b100, WAIT2 = 5'b101, FOLD2 = 5'b110, STORE2 = 5'b111, WAIT3 = 5'b1000, WAIT4 = 5'b1001, FOLD3 = 5'b1010, STORE3 = 5'b1011, WAIT5 = 5'b1100;
-    parameter COARSEGRAINLOAD = 5'b1101, COARSEGRAINWAIT = 5'b1110, COARSEGRAIN = 5'b1111, FINEGRAIN = 5'b10000, DONE = 5'b10001;
+    parameter COARSEGRAINLOAD = 5'b1101, COARSEGRAINWAIT = 5'b1110, COARSEGRAIN = 5'b1111, FINEGRAIN1 = 5'b10000, FINEGRAIN2 = 5'b10001, DONE = 5'b10010;
     
     always @(posedge clk) begin
     	if (rst) begin
@@ -257,18 +258,22 @@ module topModule(
 			
 			COARSEGRAIN: begin
 				coarseGrainSum <= CGS;
-				state <= FINEGRAIN;
+				state <= FINEGRAIN1;
 			end
 			
-			FINEGRAIN: begin
+			FINEGRAIN1: begin
 				counter[0] <= ~counter[0];
 				if(counter[0]) begin
 					enA_BRAM2 <= 1'b0;
 					counter <= 0;
-					Q <= (Q2 < 0)? Q1 : Q2;
-					state <= DONE;	
+					state <= FINEGRAIN2;	
 				end	
 			end	
+			
+			FINEGRAIN2: begin
+				Q <= (Q2[256])? Q1 : Q2[255:0];
+				state <= DONE;
+			end
 			
 			DONE: begin
 				done <= 1;
