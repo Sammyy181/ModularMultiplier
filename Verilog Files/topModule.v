@@ -21,7 +21,7 @@
 
 
 module topModule(
-	input wire clk,
+	input wire clock,
 	input wire rst,
 	input wire [255:0] X,
 	input wire [255:0] Y,
@@ -58,13 +58,13 @@ module topModule(
 	reg [6:0] addr_BRAM283;
     wire [255:0] doutA_BRAM256, doutA_BRAM265, doutA_BRAM274, doutA_BRAM283;
     
-    blk_mem_gen_0 BRAM256 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM256),.dina(256'b0),.douta(doutA_BRAM256));
-	blk_mem_gen_2 BRAM265 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM265),.dina(256'b0),.douta(doutA_BRAM265));
-	blk_mem_gen_3 BRAM274 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM274),.dina(256'b0),.douta(doutA_BRAM274));
-	blk_mem_gen_4 BRAM283 (.clka(clk),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM283),.dina(256'b0),.douta(doutA_BRAM283));
+    blk_mem_gen_0 BRAM256 (.clka(clock),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM256),.dina(256'b0),.douta(doutA_BRAM256));
+	blk_mem_gen_2 BRAM265 (.clka(clock),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM265),.dina(256'b0),.douta(doutA_BRAM265));
+	blk_mem_gen_3 BRAM274 (.clka(clock),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM274),.dina(256'b0),.douta(doutA_BRAM274));
+	blk_mem_gen_4 BRAM283 (.clka(clock),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM283),.dina(256'b0),.douta(doutA_BRAM283));
     
     // Karatsuba Submodule
-    karatsuba K1(.clk(clk),.A(x),.B(y),.rst(rst_mult),.start(start_mult),.P(prod),.done(done_mult));
+    karatsuba K1(.clock(clock),.A(x),.B(y),.rst(rst_mult),.start(start_mult),.P(prod),.done(done_mult));
     
     // Storage and wires for Karatsuba
     wire [255:0] fold_1, fold_2, fold_3;
@@ -114,8 +114,8 @@ module topModule(
     wire [3:0] addr_BRAM2a, addr_BRAM2b;
     wire [259:0] doutA_BRAM2a, doutA_BRAM2b;
     
-    blk_mem_gen_1 BRAM2a(.clka(clk),.ena(enA_BRAM2),.wea(1'b0),.addra(addr_BRAM2a),.dina(260'b0),.douta(doutA_BRAM2a)); 
-    blk_mem_gen_1 BRAM2b(.clka(clk),.ena(enA_BRAM2),.wea(1'b0),.addra(addr_BRAM2b),.dina(260'b0),.douta(doutA_BRAM2b));
+    blk_mem_gen_1 BRAM2a(.clka(clock),.ena(enA_BRAM2),.wea(1'b0),.addra(addr_BRAM2a),.dina(260'b0),.douta(doutA_BRAM2a)); 
+    blk_mem_gen_1 BRAM2b(.clka(clock),.ena(enA_BRAM2),.wea(1'b0),.addra(addr_BRAM2b),.dina(260'b0),.douta(doutA_BRAM2b));
     
     fineGrainMap FGM(.fineGrainAddr(fineGrainAddr),.addr_BRAM2a(addr_BRAM2a),.addr_BRAM2b(addr_BRAM2b));
     
@@ -131,7 +131,7 @@ module topModule(
     parameter IDLE = 5'b0, MULT1 = 5'b1, WAIT1 = 5'b10, FOLD1 = 5'b11 ,STORE1 = 5'b100, WAIT2 = 5'b101, FOLD2 = 5'b110, STORE2 = 5'b111, WAIT3 = 5'b1000, WAIT4 = 5'b1001, FOLD3 = 5'b1010, STORE3 = 5'b1011, WAIT5 = 5'b1100;
     parameter COARSEGRAINLOAD = 5'b1101, COARSEGRAINWAIT = 5'b1110, COARSEGRAIN = 5'b1111, FINEGRAIN1 = 5'b10000, FINEGRAIN2 = 5'b10001, DONE = 5'b10010;
     
-    always @(posedge clk) begin
+    always @(posedge clock) begin
     	if (rst) begin
     		rst_mult <= 1'b1;
     		done <= 1'b0;
