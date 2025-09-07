@@ -95,7 +95,7 @@ module karatsuba(
 				Pl_sum[128:0] <= Plh[127:0] + Pll[127:0]; // Plh + Pll
 				
 				// Overall Term Arithmetic
-				P[512:0] <= {Phh[127:0], Phl[127:0], Plh[127:0], Pll[127:0]} - {128'b0, Phh[127:0], Phl[127:0], 128'b0}; 
+				P[511:0] <= {Phh[127:0], Phl[127:0], Plh[127:0], Pll[127:0]} - {128'b0, Phh[127:0], Phl[127:0], 128'b0}; 
 				
 				state <= 3'b010;
 			end 
