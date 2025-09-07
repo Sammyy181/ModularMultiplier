@@ -1,6 +1,20 @@
 import random
 import math
 
+def to_twos_complement_hex(num: int, bit_width: int = 256):
+    """
+    Convert signed integer to its two's complement hex representation.
+    
+    :param num: The integer (can be positive or negative).
+    :param bit_width: Width in bits (e.g., 256 for a 256-bit number).
+    :return: Hex string of the two's complement representation.
+    """
+    if num >= 0:
+        return hex(num)[2:].zfill(bit_width // 4)  # normal hex, zero-padded
+    else:
+        # two's complement: add 2^bit_width to make it positive
+        return hex((1 << bit_width) + num)[2:].zfill(bit_width // 4)
+
 def main():
     """
     Reviewing Karatsuba Implementation Algorithm
@@ -57,7 +71,9 @@ def main():
     P_midSum = ((As % (2**64)) + (As // (2**64))) * ((Bs % (2**64)) + (Bs // (2**64)))
     midSumTerm = P_midSum - midSumPart
 
-    tempP = tempP -  midSumTerm 
+    tempP = tempP - midSumTerm
+    compP = to_twos_complement_hex(tempP,132)
+    print(f"tempP - {compP}")
 
     trial = trial - (tempP * (2**192))
     print(f"Cycle 6 - {hex(trial)}")

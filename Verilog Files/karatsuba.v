@@ -41,6 +41,7 @@ module karatsuba(
     reg [131:0] Psum_mid, midSumTerm;
     reg [131:0] tempP;
     reg [129:0] Psumsums;
+    reg [131:0] tempP1, tempP2;
     
     reg [2:0] state;
     
@@ -94,7 +95,7 @@ module karatsuba(
 				Pl_sum[128:0] <= Plh[127:0] + Pll[127:0]; // Plh + Pll
 				
 				// Overall Term Arithmetic
-				P[511:0] <= {Phh[127:0], Phl[127:0], Plh[127:0], Pll[127:0]} - {128'b0, Phh[127:0], Phl[127:0], 128'b0}; 
+				P[512:0] <= {Phh[127:0], Phl[127:0], Plh[127:0], Pll[127:0]} - {128'b0, Phh[127:0], Phl[127:0], 128'b0}; 
 				
 				state <= 3'b010;
 			end 
@@ -136,13 +137,18 @@ module karatsuba(
 			3'b100: begin
 				//5th Cycle
 				P[511:0] <= P[511:0] + (Ps_H[129:0] << 256);
-				tempP[131:0] <= tempP[130:0] - midSumTerm[131:0];
+				//tempP[131:0] <= midSumTerm[131:0] - tempP[130:0];
+				tempP1[131:0] <= midSumTerm[131:0] - tempP[130:0];
+				tempP2[131:0] <= tempP[130:0] - midSumTerm[131:0];
 				state <= 3'b101;
 			end
 			
 			3'b101: begin
 				//6th Cycle
-				P[511:0] <= P[511:0] - (tempP << 192);
+				if(midSumTerm[131:0] > tempP[130:0]) 
+					P[511:0] <= P[511:0] + (tempP1 << 192);
+				else 
+					P[511:0] <= P[511:0] - (tempP2 << 192);
 				
 				state <= 3'b110;
 			end

@@ -47,9 +47,11 @@ class ModularMultiplier():
         
         C1 = (2**320) % self.modulus
         C1PH = C1 * P1H
+        #print(f"P1L - {hex(P1L)}")
         #print(f"In second folding, bit length of C1 * P1_H is {len(bin(C1PH)) - 2}")
-        
+
         self.P2 = C1PH + P1L
+        #print(f"Value after second folding - {hex(self.P2)}")
         #print(f"Length of P2 - {len(bin(self.P2)) - 2}")
         
     def folding3(self):
@@ -67,7 +69,7 @@ class ModularMultiplier():
         self.P3 = int(binP3, 2)
 
         #print(f"Length of P3 - {len(bin(self.P3)) - 2}")
-        print(f"Value after third folding - {hex(self.P3)}")
+        #print(f"Value after third folding - {hex(self.P3)}")
 
     
     def coarse_grain(self):
@@ -139,7 +141,7 @@ def main():
     sample = ModularMultiplier(modulus)
     X = random.getrandbits(256)
     Y = random.getrandbits(256)
-    
+
     #print(f"Values\nX: {X}\nY: {Y}")
     print(f"X in hex: {hex(X)}")
     print(f"Y in hex: {hex(Y)}")

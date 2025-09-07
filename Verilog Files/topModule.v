@@ -64,7 +64,7 @@ module topModule(
 	blk_mem_gen_4 BRAM283 (.clka(clock),.ena(en_CGSBRAM),.wea(1'b0),.addra(addr_BRAM283),.dina(256'b0),.douta(doutA_BRAM283));
     
     // Karatsuba Submodule
-    karatsuba K1(.clock(clock),.A(x),.B(y),.rst(rst_mult),.start(start_mult),.P(prod),.done(done_mult));
+    karatsuba K1(.clock(clock),.A(x),.B(y),.reset(rst_mult),.start(start_mult),.P(prod),.done(done_mult));
     
     // Storage and wires for Karatsuba
     wire [255:0] fold_1, fold_2, fold_3;
@@ -74,19 +74,21 @@ module topModule(
     
     // First Folding inputs and outputs
     wire [384:0] sumFold1;
+    reg [384:0] sumFold1reg;
     assign fold_1[255:0] = {128'b0, prod[511:384]};
-    assign sumFold1[384:0] = prod[383:0] + storeLSB[383:0]; 
+    assign sumFold1[384:0] = sumFold1reg[384:0]; //prod[383:0] + storeLSB[383:0]; 
     
     // Second Folding inputs and outputs
     wire [321:0] sumFold2;
+    reg [321:0] sumFold2reg;
     assign fold_2[255:0] = {191'b0, sumFold1[384:320]};
-    assign sumFold2[321:0] = prod[320:0] + storeLSB[320:0];
+    assign sumFold2[321:0] = sumFold2reg[321:0];//prod[320:0] + storeLSB[319:0];
     
     // Third Folding inputs and outputs
     wire [289:0] sumFold3;
     reg [289:0] foldOut;
     assign fold_3[255:0] = {223'b0, sumFold2[321:289]};
-    assign sumFold3[289:0] = prod[288:0] + storeLSB[288:0];
+    //assign sumFold3[289:0] = foldOut;//prod[288:0] + storeLSB[288:0];
     
     
     // Get Karatsuba multiplier inputs
@@ -148,6 +150,8 @@ module topModule(
     			storeLSB <= 384'b0;
     			selReg <= 2'b0;
 				selMod <= 2'b0;
+				sumFold1reg <= 385'b0;
+				sumFold2reg <= 322'b0;
     			foldOut <= 290'b0;
     			coarseGrainSum <= 259'b0;
     			enA_BRAM2 <= 1'b0;
@@ -185,11 +189,16 @@ module topModule(
 				if(done_mult) begin
 					selMod <= 2'b01;
 					fold_level <= 2'b10;
+					sumFold1reg[192:0] <= prod[191:0] + storeLSB[191:0];
 					state <= WAIT2;
 				end					
 			end
 
-			WAIT2: state <= FOLD2;
+			WAIT2: begin
+				sumFold1reg[384:192] <= sumFold1reg[192] + prod[383:192] + storeLSB[383:192];
+				
+				state <= FOLD2;
+			end
 			
 			FOLD2: begin
 				start_mult <= 1'b1;
@@ -206,12 +215,18 @@ module topModule(
 				selReg <= 2'b10;
 				if(done_mult) begin
 					selMod <= 2'b10;
-					fold_level <= 2'b11;
+					sumFold2reg[162:0] <= prod[161:0] + storeLSB[161:0];
+					
 					state <= WAIT4;
 				end
 			end
 
-			WAIT4: state <= FOLD3;
+			WAIT4: begin
+				sumFold2reg[321:162] <= sumFold2reg[162] + prod[320:162] + storeLSB[319:162];	
+				fold_level <= 2'b11;
+				
+				state <= FOLD3;
+			end
 			
 			FOLD3: begin
 				start_mult <= 1'b1;
@@ -226,11 +241,12 @@ module topModule(
 			
 			WAIT5: begin
 				if(done_mult) begin
+					foldOut[145:0] <= prod[144:0] + storeLSB[144:0];
 					counter[0] <= ~counter[0];
 				end
 				if(counter[0]) begin
 					counter[0] <= 1'b0;
-					foldOut <= sumFold3;
+					foldOut[289:145] <= foldOut[145] + prod[288:145] + storeLSB[288:145];
 					en_CGSBRAM <= 1'b1;
 					state <= COARSEGRAINLOAD;
 				end	
