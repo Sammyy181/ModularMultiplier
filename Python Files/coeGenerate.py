@@ -2,7 +2,7 @@ import random
 
 def generate_bits(length=256, output_file = "", power=256):
     """
-    Code to generate the modulus of (2^(power)*P) mod M for P in range(0,128), change 128 to whatever range you want in line 30
+    Generate the modulus of (2^(power)*P) mod M for P in range(0,128), change 128 to whatever range you want in line 30
     """
     random.seed(42)
     modulus = random.getrandbits(length)

@@ -2,6 +2,9 @@ import serial
 import threading
 import time
 
+"""
+Python Script to communicate with FPGA through UART
+"""
 
 SERIAL_PORT = 'COM9'  # Replace with your serial port
 BAUD_RATE = 115200

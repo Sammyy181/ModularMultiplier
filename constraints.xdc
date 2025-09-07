@@ -1,7 +1,8 @@
 set_property IOSTANDARD LVCMOS33 [get_ports clock]
 set_property PACKAGE_PIN E3 [get_ports clock]
-create_clock -name clk100 -period 10.0 [get_ports clock]
+create_clock -name clk100 -period 15 [get_ports clock]
 
+## For UART RxD Trial
 if{0} {
 set_property IOSTANDARD LVCMOS33 [get_ports Rx]
 set_property PACKAGE_PIN C4 [get_ports Rx]
@@ -31,6 +32,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports display[0]]
 set_property PACKAGE_PIN H17 [get_ports display[0]]
 }
 
+## For UART TxD Trial
 if{0}{
 set_property IOSTANDARD LVCMOS33 [get_ports Tx]
 set_property PACKAGE_PIN D4 [get_ports Tx]
@@ -43,6 +45,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports done]
 set_property PACKAGE_PIN V11 [get_ports done]
 }
 
+## For Top Module Implementation
 set_property IOSTANDARD LVCMOS33 [get_ports Tx]
 set_property PACKAGE_PIN D4 [get_ports Tx]
 set_property IOSTANDARD LVCMOS33 [get_ports Rx]
