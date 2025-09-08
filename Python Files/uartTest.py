@@ -1,63 +1,48 @@
 import serial
 import threading
-import time
+import binascii
 
-"""
-Python Script to communicate with FPGA through UART
-"""
+# === Adjust for your setup ===
+PORT = "COM9"           # e.g. "/dev/ttyUSB0" on Linux
+BAUD = 115200           # Matches FPGA UART
+SEND_SIZE = 64          # 64 bytes = 512 bits
 
-SERIAL_PORT = 'COM9'  # Replace with your serial port
-BAUD_RATE = 115200
-TIMEOUT = 1
-
-# Initialize the serial connection
-try:
-	ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=TIMEOUT)
-except:
-	print(f"Could not connect to {SERIAL_PORT}")
-	exit()
-
-def listen_to_serial():
-    """Thread function to continuously listen to serial data."""
+def listen_uart(ser):
+    """ Continuously read data from FPGA and print it """
     while True:
-        if ser.in_waiting > 0:
-        
-            #data = ser.readline().decode('utf-8').strip()
-            #data = ser.read(1)
-            byte_data = ser.read(1)
-            data = int.from_bytes(byte_data, byteorder='big')
-            if data:
-                print(f"Received: {data}")
-
-def send_user_input():
-    """Thread function to send user input to the serial port."""
-    while True:
-        user_input = input("Enter data to send: ")
-        b = int(user_input)
-        if user_input:
-        #ser.write(user_input.encode('utf-8') + b'\n')
-         ser.write(b.to_bytes(1, byteorder='big'))
+        data_in = ser.read(ser.in_waiting or 1)
+        if data_in:
+            print(f"\n[FPGA → PC] {data_in.hex()}")
 
 def main():
-    # Create and start threads
-    listener_thread = threading.Thread(target=listen_to_serial, daemon=True)
-    sender_thread = threading.Thread(target=send_user_input, daemon=True)
-    
-    listener_thread.start()
-    sender_thread.start()
+    with serial.Serial(PORT, BAUD, timeout=0.1) as ser:
+        print(f"Opened {PORT} at {BAUD} baud")
+        print("Type 128 hex characters (64 bytes) to send to FPGA.")
+        print("Press Ctrl+C to exit.\n")
 
-    # Keep the main program running
-    try:
+        # Start listener thread
+        t = threading.Thread(target=listen_uart, args=(ser,), daemon=True)
+        t.start()
+
+        # Main loop: accept user input for sending
         while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Program terminated.")
-    finally:
-        ser.close()
+            user_input = input("\n[PC → FPGA] Enter 128 hex chars: ").strip()
+            try:
+                data_out = binascii.unhexlify(user_input)
+            except binascii.Error:
+                print("❌ Invalid hex string.")
+                continue
+
+            if len(data_out) != SEND_SIZE:
+                print(f"❌ Must be exactly {SEND_SIZE} bytes ({SEND_SIZE*2} hex chars).")
+                continue
+
+            ser.write(data_out)
+            ser.flush()
+            print(f"✅ Sent {SEND_SIZE} bytes.")
 
 if __name__ == "__main__":
-    main()
-
-#X in hex: 151 42 132 105 22 65 159 130 139 157 36 52 228 101 225 80 189 156 102 179 173 60 45 109 26 61 31 167 188 137 96 169
-
-#Y in hex: 00 154 29 230 68 129 94 246 209 59 143 170 24 55 248 168 139 23 252 105 90 7 160 202 110 8 34 232 243 108 3 17 153
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nExiting.")

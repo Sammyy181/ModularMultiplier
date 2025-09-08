@@ -139,8 +139,11 @@ def main():
     print(f"Modulus - {modulus}")
     
     sample = ModularMultiplier(modulus)
-    X = random.getrandbits(256)
-    Y = random.getrandbits(256)
+    #X = random.getrandbits(256)
+    #Y = random.getrandbits(256)
+    #Y = X = (2**256) - 1
+    X = int("1000800200100080020010008002001000800200100080020010008002001000",16)
+    Y = int("0080020010008002001000001000800200100080020010008002001000800200",16)
 
     #print(f"Values\nX: {X}\nY: {Y}")
     print(f"X in hex: {hex(X)}")
