@@ -1,6 +1,6 @@
 `include "karatsuba.v"
 
-module karatsuba_tb();
+module pipelineKaratsuba();
 
     reg clock, in_valid;
     reg [255:0] X, Y;

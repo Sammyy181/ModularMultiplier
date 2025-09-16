@@ -32,15 +32,38 @@ class ModularMultiplier():
         P0_H, P0_L = self.get_parts(P=self.P0, Plen=512, L=128)
         
         C0 = (2**384) % self.modulus
-        #print(f"C0 - {hex(C0)}")
+        print(f"C0 - {hex(C0)}")
+        
+        binC = bin(C0)[2:].zfill(256)
+        hexC = hex(int(binC,2))[2:]
+        C0_ = int(binC[192:],2)
+        C1 = int(binC[128:192],2)
+        C2 = int(binC[64:128],2)
+        C3 = int(binC[:64],2)
+        
+        Y1Y0 = C0_ + C1
+        Y2Y0 = C2 + C0_
+        Y2Y1 = C2 + C1
+        Y3Y0 = C3 + C0_
+        Y3Y1 = C3 + C1
+        
+        binX = bin(P0_H)[2:]
+        X1X0 = int(binX[:64],2) + int(binX[64:],2)
+        
+        print(f"X = {hex(P0_H)[2:]}")
+        print(f"Y = {hexC[32:]}")
+        print(f"X1X0 = {hex(X1X0)[2:]}")
+        print(f"Y1Y0 = {hex(Y1Y0)[2:]}")
+        print(f"Y2Y0 = {hex(Y2Y0)[2:]}")
+        print(f"Y2Y1 = {hex(Y2Y1)[2:]}")
+        print(f"Y3Y0 = {hex(Y3Y0)[2:]}")
+        print(f"Y3Y1 = {hex(Y3Y1)[2:]}")
+        
         C0PH = C0 * P0_H
-        #print(f"C0 * PH = {hex(C0PH)[2:]}")
-        #print(f"storeLSB value - {hex(P0_L)[2:]}")
-        #print(f"In first folding, bit length of C0 * P0_H is {len(bin(C0PH)) - 2}")
+        
+        print(f"C0PH = {hex(C0PH)[2:]}")
         
         self.P1 = C0PH + P0_L
-        #print(f"Value after first folding - {hex(self.P1)}")
-        #print(f"Length of P1 - {len(hex(self.P1)) - 2}")
     
     def folding2(self):
         P1H, P1L = self.get_parts(P=self.P1, Plen=385, L=65)
@@ -139,11 +162,11 @@ def main():
     print(f"Modulus - {modulus}")
     
     sample = ModularMultiplier(modulus)
-    #X = random.getrandbits(256)
-    #Y = random.getrandbits(256)
+    X = random.getrandbits(256)
+    Y = random.getrandbits(256)
     #Y = X = (2**256) - 1
-    X = int("1000800200100080020010008002001000800200100080020010008002001000",16)
-    Y = int("0080020010008002001000001000800200100080020010008002001000800200",16)
+    #X = int("1000800200100080020010008002001000800200100080020010008002001000",16)
+    #Y = int("0080020010008002001000001000800200100080020010008002001000800200",16)
 
     #print(f"Values\nX: {X}\nY: {Y}")
     print(f"X in hex: {hex(X)}")
