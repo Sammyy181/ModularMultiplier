@@ -1,4 +1,4 @@
-; Stores Modulus of P[264:256] mod M
+; Stores modulus values for (2^(256)*P) mod M - indexes P[264:256]
 ; 9 address bits, outputs 256 bits
 
 memory_initialization_radix=16;
