@@ -6,6 +6,7 @@ def main():
     #X = 2**128 - 1
     binX = bin(X)[2:].zfill(128)
     binY = bin(Y)[2:].zfill(256)
+    # Y - 1c424d77f1b750a99cc6df2b0ee713a2
     
     #print(f"Product = {hex(X * Y)[2:]}")
     
@@ -15,10 +16,18 @@ def main():
     
     
     S10 = (int(binY[128:192],2) + int(binY[192:],2)) * (int(binX[64:],2) + int(binX[:64],2))
-    X1X0 = (int(binX[64:],2) + int(binX[:64],2))
+    #X1X0 = (int(binX[64:],2) + int(binX[:64],2))
     Y1Y0 = (int(binY[128:192],2) + int(binY[192:],2))
+    Y2Y0 = (int(binY[64:128],2) + int(binY[192:],2))
+    Y2Y1 = (int(binY[128:192],2) + int(binY[64:128],2))
+    Y3Y0 = (int(binY[:64],2) + int(binY[192:],2))
+    Y3Y1 = (int(binY[128:192],2) + int(binY[:64],2))
     #print(f"X1X0 = {hex(X1X0)[2:]}")
-    #print(f"Y1Y0 = {hex(Y1Y0)[2:]}")
+    print(f"Y1Y0 = {hex(Y1Y0)[2:]}")
+    print(f"Y2Y0 = {hex(Y2Y0)[2:]}")
+    print(f"Y2Y1 = {hex(Y2Y1)[2:]}")
+    print(f"Y3Y0 = {hex(Y3Y0)[2:]}")
+    print(f"Y3Y1 = {hex(Y3Y1)[2:]}")
     #print(f"S10 - {hex(S10)[2:]}")
     S20 = (int(binY[64:128],2) + int(binY[192:],2)) * int(binX[64:],2)
     S21 = (int(binY[64:128],2) + int(binY[128:192],2)) * int(binX[:64],2)
