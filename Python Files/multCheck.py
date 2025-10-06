@@ -38,6 +38,7 @@ def main():
     P11 = int(binX[128:192],2) * int(binY[128:192],2)
     P22 = int(binX[64:128],2) * int(binY[64:128],2)
     P33 = int(binX[:64],2) * int(binY[:64],2)
+    print(f"P33 - {hex(P33)[2:]}")
     
     S10X = int(binX[192:],2) + int(binX[128:192],2)
     S20X = int(binX[64:128],2) + int(binX[192:],2)

@@ -16,13 +16,13 @@ def main():
     
     
     S10 = (int(binY[128:192],2) + int(binY[192:],2)) * (int(binX[64:],2) + int(binX[:64],2))
-    #X1X0 = (int(binX[64:],2) + int(binX[:64],2))
+    X1X0 = (int(binX[64:],2) + int(binX[:64],2))
     Y1Y0 = (int(binY[128:192],2) + int(binY[192:],2))
     Y2Y0 = (int(binY[64:128],2) + int(binY[192:],2))
     Y2Y1 = (int(binY[128:192],2) + int(binY[64:128],2))
     Y3Y0 = (int(binY[:64],2) + int(binY[192:],2))
     Y3Y1 = (int(binY[128:192],2) + int(binY[:64],2))
-    #print(f"X1X0 = {hex(X1X0)[2:]}")
+    print(f"X1X0 = {hex(X1X0)[2:]}")
     print(f"Y1Y0 = {hex(Y1Y0)[2:]}")
     print(f"Y2Y0 = {hex(Y2Y0)[2:]}")
     print(f"Y2Y1 = {hex(Y2Y1)[2:]}")
@@ -43,29 +43,37 @@ def main():
     T4K = S31 - P11
     
     #print(f"P1P0 - {hex(P1P0)[2:]}")
-    #print(f"P00 - {hex(P00)[2:]}")
+    print(f"P00 - {hex(P00)[2:]}")
     
     # 3rd Cycle
     T1K = S10 - P1P0
     T2K = M20 + P11
     T3K = M30 + M21
     
-    #print(f"T1K - {hex(T1K)[2:]}")
+    print(f"T1K - {hex(T1K)[2:]}")
     
     # 4th Cycle
+    result_3 = hex(P00)[-16:]
     sum_1 = (T0K // (2**64)) + T1K
-    #print(f"sum_1 - {hex(sum_1)[2:]}")
+    print(f"sum_1 - {hex(sum_1)[2:]}")
     sum_3 = (T2K // (2**64)) + (T3K % (2**64))
     sum_4 = (T3K // (2**64)) + T4K
+
+    print(f"result_3 = {result_3}")
     
     # 5th Cycle
+    result_4 = hex(sum_1)[-16:] + result_3
+    print(f"result_4 = {result_4}")
     sum_2 = (sum_1 // (2**64)) + (T2K % (2**64))
     upSum = (((sum_3 // (2**64)) + sum_4) * (2**64)) + (sum_3 % (2**64))
     #print(f"upSum - {hex(upSum)}")
     
     # 6th Cycle
     P = (T0K % (2**64)) + ((sum_1 % (2**64)) * (2**64)) + ((sum_2 % (2**64)) * (2**128)) + (upSum * (2**192))
-    #print(f"Karatsuba Product - {hex(P)[2:]}")
+    print(f"Karatsuba Product - {hex(P)[2:]}")
     
 if __name__ == "__main__":
     main()
+
+#b9092ca3009e644ae3bdb2880e48af56
+#b9092ca3009e644ae3bdb2880e48af56

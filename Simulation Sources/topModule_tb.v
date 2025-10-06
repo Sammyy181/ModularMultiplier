@@ -22,13 +22,12 @@
 
 module topModule_tb();
 
-	reg clk, rst, start;
+	reg clk, rst, in_valid;
 	reg [255:0] X, Y;
 	wire [255:0] Q;
-	wire done;
+	wire out_valid;
 	
-	
-	topModule uut (.clock(clk),.rst(rst),.start(start),.X(X),.Y(Y),.Q(Q),.done(done));
+	topModule uut (.clock(clk),.in_valid(in_valid),.reset(rst),.Xin(X),.Yin(Y),.Q(Q),.out_valid(out_valid));
 	
 	initial begin
 		clk <= 0;
@@ -37,15 +36,14 @@ module topModule_tb();
 
 	initial begin
 		rst <= 1'b1;
+		in_valid <= 1'b0;
 		
 		#15 rst <= 1'b0;
+		in_valid <= 1'b1;
 		
-		//#15 X <= 256'h972a846916419f828b9d2434e465e150bd9c66b3ad3c2d6d1a3d1fa7bc8960a9;
-		//#15 Y <= 256'h9a1de644815ef6d13b8faa1837f8a88b17fc695a07a0ca6e0822e8f36c031199;
-		#15 X <= 256'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-		#15 Y <= 256'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-		
-		#30 start <= 1'b1;  
-		#20 start <= 1'b0;
+		#15 X <= 256'h972a846916419f828b9d2434e465e150bd9c66b3ad3c2d6d1a3d1fa7bc8960a9;
+		Y <= 256'h9a1de644815ef6d13b8faa1837f8a88b17fc695a07a0ca6e0822e8f36c031199;
+	    //#15 X <= 256'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+		//Y <= 256'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 	end
 endmodule

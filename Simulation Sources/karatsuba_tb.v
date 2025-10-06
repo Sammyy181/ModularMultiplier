@@ -22,14 +22,18 @@
 
 module karatsuba_tb();
 
-    reg [255:0] A, B;
-    reg start, reset;
-    wire done;
-    wire [511:0] P;
-    reg clk = 1'b0;
-    wire [131:0] tempP;
+	reg clk = 1'b0;
+	wire [511:0] P;
+    reg [255:0] X, Y;
+    reg reset;
+    reg in_valid;
+    wire out_valid;
+    wire [127:0] P00, T0K_1, T0K_2;
+    wire [63:0] result_3;
     
-    karatsuba K1(.clock(clk), .A(A), .B(B), .start(start), .reset(reset), .done(done), .P(P));
+    karatsuba K1(.clock(clk), .in_valid(in_valid), .Xin(X), .Yin(Y), .out_valid(out_valid), .reset(reset), .P(P),
+    			.P00(P00),.result_3(result_3),.T0K_1(T0K_1),.T0K_2(T0K_2));
+    		
     initial begin
         /*for(i = 0; i < 8; i = i + 1) begin 
             A[32*i +: 32] = $random(seed);
@@ -38,16 +42,16 @@ module karatsuba_tb();
         for(i = 0; i < 8; i = i + 1) begin
             B[32*i +: 32] = $random(seed);
         end*/
-        A = 256'd68374361576449959379811878238702970795767227995234058958640265755013581201577;
-        B = 256'd69709006495262083753438964270882567809667203355268795714903518762464260067737;
+        X = 256'd68374361576449959379811878238702970795767227995234058958640265755013581201577;
+        Y = 256'd69709006495262083753438964270882567809667203355268795714903518762464260067737;
         //A = 256'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //B = 256'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-        start = 0;
-        reset = 1;
+        
+        in_valid <= 0;
+        reset <= 1;
         
         #15 reset = 0;
-        #10 start = 1;
-        #20 start = 0;
+        in_valid <= 1;
        
     end
     

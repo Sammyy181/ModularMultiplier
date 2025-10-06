@@ -32,7 +32,7 @@ class ModularMultiplier():
         P0_H, P0_L = self.get_parts(P=self.P0, Plen=512, L=128)
         
         C0 = (2**384) % self.modulus
-        print(f"C0 - {hex(C0)}")
+        #print(f"C0 - {hex(C0)}")
         
         binC = bin(C0)[2:].zfill(256)
         hexC = hex(int(binC,2))[2:]
@@ -50,89 +50,68 @@ class ModularMultiplier():
         binX = bin(P0_H)[2:]
         X1X0 = int(binX[:64],2) + int(binX[64:],2)
         
-        print(f"X = {hex(P0_H)[2:]}")
-        print(f"Y = {hexC[32:]}")
-        print(f"X1X0 = {hex(X1X0)[2:]}")
-        print(f"Y1Y0 = {hex(Y1Y0)[2:]}")
-        print(f"Y2Y0 = {hex(Y2Y0)[2:]}")
-        print(f"Y2Y1 = {hex(Y2Y1)[2:]}")
-        print(f"Y3Y0 = {hex(Y3Y0)[2:]}")
-        print(f"Y3Y1 = {hex(Y3Y1)[2:]}")
+        #print(f"X = {hex(P0_H)[2:]}")
+        #print(f"Y = {hexC[32:]}")
+        #print(f"X1X0 = {hex(X1X0)[2:]}")
+        #print(f"Y1Y0 = {hex(Y1Y0)[2:]}")
+        #print(f"Y2Y0 = {hex(Y2Y0)[2:]}")
+        #print(f"Y2Y1 = {hex(Y2Y1)[2:]}")
+        #print(f"Y3Y0 = {hex(Y3Y0)[2:]}")
+        #print(f"Y3Y1 = {hex(Y3Y1)[2:]}")
         
         C0PH = C0 * P0_H
         
-        print(f"C0PH = {hex(C0PH)[2:]}")
+        #print(f"C0PH = {hex(C0PH)[2:]}")
         
         self.P1 = C0PH + P0_L
-    
-    def folding2(self):
-        P1H, P1L = self.get_parts(P=self.P1, Plen=385, L=65)
-        
-        C1 = (2**320) % self.modulus
-        C1PH = C1 * P1H
-        #print(f"P1L - {hex(P1L)}")
-        #print(f"In second folding, bit length of C1 * P1_H is {len(bin(C1PH)) - 2}")
 
-        self.P2 = C1PH + P1L
-        #print(f"Value after second folding - {hex(self.P2)}")
-        #print(f"Length of P2 - {len(bin(self.P2)) - 2}")
-        
-    def folding3(self):
-        P2H, P2L = self.get_parts(P=self.P2, Plen=322, L=33)
+        #print(f"Value after first folding - {hex(self.P1)[2:]}")
+        #print(f"coarseGrainlow = {hex(self.P1)[-64:]}")
 
-        C2 = (2**289) % self.modulus
-        C2PH = C2 * P2H
-        #print(f"In third folding, bit length of C2 * P2_H is {len(bin(C2PH)) - 2}")
+        foldLow = (C0PH % (2**192)) + (P0_L % (2**192))
+        foldHigh = (C0PH // (2**192)) + (P0_L // (2**192))
 
-        self.P3 = C2PH + P2L
-
-        binP3 = bin(self.P3)[2:]
-        while len(binP3) < 290:
-            binP3 = '0' + binP3
-        self.P3 = int(binP3, 2)
-
-        #print(f"Length of P3 - {len(bin(self.P3)) - 2}")
-        #print(f"Value after third folding - {hex(self.P3)}")
+        #print(f"foldLow - {hex(foldLow)[2:]}")
+        #print(f"foldHigh - {hex(foldHigh)[2:]}")
 
     
     def coarse_grain(self):
-        n = len(bin(self.modulus)) - 2  
-        beta = 9                       
+        n = 256
+        beta = 9
 
-        binP3 = bin(self.P3)[2:]
-        binP3 = binP3.rjust(len(binP3), '0')  
+        binP1 = bin(self.P1)[2:]
+        binP1 = binP1.rjust(391, '0')
 
-        excess = len(binP3) - n
-        if excess <= 0:
-            self.Pcoarse = self.P3
-            return
+        c = 15
+        chunks = []
 
-        c = (excess + beta - 1) // beta
+        for i in range (c):
+            chunks.append(int(binP1[i*beta:(i+1)*beta],2))
+        
+        #print(chunks)
+        chunks.reverse()
 
-        top_bits = binP3[:excess].rjust(c * beta, '0')
+        self.Pcoarse = int(binP1[-256:],2)
 
-        chunks = [int(top_bits[i*beta:(i+1)*beta], 2) for i in range(c)]
-
-        Pbase = int(binP3[excess:], 2)
-
-        self.Pcoarse = Pbase
         for i, chunk in enumerate(chunks):
-            exp = n + (c - 1 - i) * beta
-            term = (pow(2, exp, self.modulus) * chunk) % self.modulus
-            self.Pcoarse = (self.Pcoarse + term) % self.modulus
+            exp = 256 + (i * beta)
+            partTerm = ((2**exp) * chunk) % self.modulus
+            #print(f"Term Number {i+1} - {hex(partTerm)[2:]}")
+            self.Pcoarse += partTerm
 
-        #print(f"After coarse grain reduction, length of P becomes {len(bin(self.Pcoarse)) - 2}")
+        #print(f"Pcoarse = {hex(self.Pcoarse)[2:]}")
+        #print(f"Check - {hex(self.Pcoarse % self.modulus)}")
 
     
     def findK(self):
         Plen = len(bin(self.Pcoarse)) - 2
         bin_Pcoarse = bin(self.Pcoarse)[2:]
         
-        while Plen < 259:
+        while Plen < 260:
             bin_Pcoarse = '0' + bin_Pcoarse
             Plen += 1
         
-        gamma = bin_Pcoarse[:4]
+        gamma = bin_Pcoarse[:5]
         gamma = int(gamma,2) * (2**255)
         
         self.K1 = math.floor(gamma/self.modulus)
@@ -146,7 +125,7 @@ class ModularMultiplier():
         
         self.Q = Q1 if Q2<0 else Q2
         #print(f"Q2: {Q2}")
-        #print(f"Modulus according to paper: {self.Q}")
+        #print(f"Modulus according to paper: {hex(self.Q)[2:]}")
     
 def main():
     random.seed(42)
@@ -159,28 +138,32 @@ def main():
         bitwidth += 1
     
     modulus = int(binary_modulus, 2)
-    print(f"Modulus - {hex(modulus)[2:]}")
+    #print(f"Modulus - {hex(modulus)[2:]}")
     
     sample = ModularMultiplier(modulus)
-    X = random.getrandbits(256)
-    Y = random.getrandbits(256)
     #Y = X = (2**256) - 1
     #X = int("1000800200100080020010008002001000800200100080020010008002001000",16)
     #Y = int("0080020010008002001000001000800200100080020010008002001000800200",16)
 
     #print(f"Values\nX: {X}\nY: {Y}")
-    print(f"X in hex: {hex(X)}")
-    print(f"Y in hex: {hex(Y)}")
-    calculated_mod = (X*Y) % modulus
-    calculated_mod = hex(calculated_mod)
-    print(f"Theoretical Q = {calculated_mod}")
-    
-    sample.mult(X,Y)
-    sample.folding1()
-    sample.folding2()
-    sample.folding3()
-    sample.coarse_grain()
-    sample.fine_grain()
+
+    for i in range(2):
+        X = random.getrandbits(256)
+        Y = random.getrandbits(256)
+        print(f"Iteration No {i}")
+        print(f"X in hex: {hex(X)}")
+        print(f"Y in hex: {hex(Y)}")
+        calculated_mod = (X*Y) % modulus
+        calculated_mod = hex(calculated_mod)
+        print(f"Theoretical Q = {calculated_mod[2:]}")
+        #print(f"X*Y = {hex(X*Y)[2:]}")
+        #print(f"Plow = {hex(X*Y)[-96:]}")
+        
+        sample.mult(X,Y)
+        sample.folding1()
+        sample.coarse_grain()
+        sample.fine_grain()
+        print("########################################################")
     
     #print(f"Error: {sample.Q - calculated_mod}")
 
