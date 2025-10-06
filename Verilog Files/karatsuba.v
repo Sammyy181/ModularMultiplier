@@ -29,60 +29,62 @@ module karatsuba(
 	output reg out_valid
     );
     
+	// 0th Cycle
     reg [255:0] X, Y;
+	reg valid_0;
     
     //1st Cycle 
     wire [127:0] P11, P22, P33, P00; 
     reg [64:0] S10X, S10Y, S20X, S20Y, S21X, S21Y, S30X, S30Y, S31X, S31Y, S32X, S32Y;
+	reg valid_1;
     
-    // 1.1, 1.2, 1.3
+    // 2nd, 3rd and 4th Cycles
     reg [64:0] S10X_1, S10Y_1, S20X_1, S20Y_1, S21X_1, S21Y_1, S30X_1, S30Y_1, S31X_1, S31Y_1, S32X_1, S32Y_1;
     reg [64:0] S10X_2, S10Y_2, S20X_2, S20Y_2, S21X_2, S21Y_2, S30X_2, S30Y_2, S31X_2, S31Y_2, S32X_2, S32Y_2;
     reg [64:0] S10X_3, S10Y_3, S20X_3, S20Y_3, S21X_3, S21Y_3, S30X_3, S30Y_3, S31X_3, S31Y_3, S32X_3, S32Y_3;
+    reg valid_2, valid_3, valid_4;
     
-    reg valid_0;
-    
-    //2nd Cycle
+    //5th Cycle
     reg [128:0] P1P0, P2P0, P2P1, P3P0, P3P1, P3P2;
     reg [129:0] S10, S20, S21, S30, S31, S32;
     reg [127:0] P11_1, P22_1, T6K_1, T0K_1; 
-    reg valid_1;
+    reg valid_t;
     
-    //3rd Cycle
+    //6th Cycle
     reg [128:0] T1K_2, T5K_2, M21, M30, M31, M20;
     reg [127:0] P11_2, P22_2, T6K_2, T0K_2;
-    reg valid_2;
+    reg valid_6;
     
-    //4th Cycle
+    //7th Cycle
     reg [129:0] T2K_3, T4K_3;
     reg [128:0] upSum_3;
     reg [129:0] T3K_3;
     reg [129:0] lowSum_3;
     reg [63:0] result_3;
     reg [63:0] T5K_L;
-    reg valid_3;
+    reg valid_7;
 
-	//5th Cycle
+	//8th Cycle
 	reg [127:0] result_4;
 	reg [129:0] sum3_4;
 	reg [129:0] T3K_4;
 	reg [63:0] T4K_L_4;
 	reg [65:0] sum5_4;
 	reg [128:0] upSum_4;
-	reg valid_4;
+	reg valid_8;
 
-	//6th Cycle
+	//9th Cycle
 	reg [191:0] result_5;
 	reg [130:0] sum4_5;
 	reg [63:0] T4K_L_5;
 	reg [191:0] upSum_5;
-	reg valid_5;
+	reg valid_9;
 
-	//7th Cycle
+	//10th Cycle
 	reg [255:0] result_6;
 	reg	[67:0] sum5_6;
 	reg [191:0] upSum_6;
-	reg valid_6;
+	reg valid_10;
      
     karatsuba32 K00(.clock(clock),.reset(reset),.Xin(X[63:0]),.Yin(Y[63:0]),.P(P00));
     karatsuba32 K11(.clock(clock),.reset(reset),.Xin(X[127:64]),.Yin(Y[127:64]),.P(P11));
@@ -108,6 +110,8 @@ module karatsuba(
     		// 0th Cycle
     		X <= Xin;
     		Y <= Yin;
+
+			valid_0 <= in_valid;
     	
     		// 1st Cycle
     		S10X <= X[127:64] + X[63:0];
@@ -124,9 +128,9 @@ module karatsuba(
 			S31Y <= Y[255:192] + Y[127:64];
 			S32Y <= Y[255:192] + Y[191:128];
 			
-			valid_0 <= in_valid;
+			valid_1 <= valid_0;
 			
-			// 1.1 Cycle
+			// 2nd Cycle
 			S10X_1 <= S10X;
 			S20X_1 <= S20X;
 			S30X_1 <= S30X;
@@ -140,8 +144,10 @@ module karatsuba(
 			S21Y_1 <= S21Y;
 			S31Y_1 <= S31Y;
 			S32Y_1 <= S32Y;
+
+			valid_2 <= valid_1;
 			
-			// 1.2 Cycle
+			// 3rd Cycle
 			S10X_2 <= S10X_1;
 			S20X_2 <= S20X_1;
 			S30X_2 <= S30X_1;
@@ -155,8 +161,10 @@ module karatsuba(
 			S21Y_2 <= S21Y_1;
 			S31Y_2 <= S31Y_1;
 			S32Y_2 <= S32Y_1;
+
+			valid_3 <= valid_2;
 			
-			// 1.3 Cycle (Ready Here)
+			// 4th Cycle (Ready Here)
 			S10X_3 <= S10X_2;
 			S20X_3 <= S20X_2;
 			S30X_3 <= S30X_2;
@@ -170,8 +178,10 @@ module karatsuba(
 			S21Y_3 <= S21Y_2;
 			S31Y_3 <= S31Y_2;
 			S32Y_3 <= S32Y_2;
+
+			valid_4 <= valid_3;
     		
-    		// 2nd Cycle
+    		// 5th Cycle
     		S10 <= S10X_3 * S10Y_3;
     		S20 <= S20X_3 * S20Y_3;
     		S21 <= S21X_3 * S21Y_3;
@@ -191,9 +201,9 @@ module karatsuba(
     		P22_1 <= P22;
     		T6K_1 <= P33;
     		
-    		valid_1 <= valid_0;
+    		valid_5 <= valid_4;
     		
-    		// 3rd Cycle
+    		// 6th Cycle
     		T1K_2[128:0] <= S10[129:0] - P1P0[128:0];
     		M20[128:0] <= S20[129:0] - P2P0[128:0];
     		M21[128:0] <= S21[129:0] - P2P1[128:0];
@@ -206,9 +216,9 @@ module karatsuba(
     		P22_2 <= P22_1;
     		T6K_2 <= T6K_1;
     		
-    		valid_2 <= valid_1;
+    		valid_6 <= valid_5;
     		
-    		// 4th Cycle
+    		// 7th Cycle
     		result_3[63:0] <= T0K_2[63:0];
     		lowSum_3[129:0] <= T1K_2[128:0] + T0K_2[127:64];
     		T2K_3 <= P11_2 + M20;
@@ -217,9 +227,9 @@ module karatsuba(
     		T5K_L[63:0] <= T5K_2[63:0];
     		upSum_3[128:0] <= T5K_2[128:64] + T6K_2;
     		
-    		valid_3 <= valid_2;
+    		valid_7 <= valid_6;
 
-			// 5th Cycle
+			// 8th Cycle
 			result_4[127:0] <= {lowSum_3[63:0],result_3[63:0]};
 			sum3_4[129:0] <= T2K_3 + lowSum_3[129:64];
 			T3K_4 <= T3K_3;
@@ -227,27 +237,27 @@ module karatsuba(
 			sum5_4[65:0] <= T4K_3[129:64] + T5K_L[63:0];
 			upSum_4 <= upSum_3;
 
-			valid_4 <= valid_3;
+			valid_8 <= valid_7;
 
-			// 6th Cycle
+			// 9th Cycle
 			result_5[191:0] <= {sum3_4[63:0], result_4[127:0]};
 			sum4_5 <= sum3_4[129:64] + T3K_4;
 			T4K_L_5 <= T4K_L_4;
 			upSum_5[191:0] <= {(upSum_4 + sum5_4[65:64]), sum5_4[63:0]};
 
-			valid_5 <= valid_4;
+			valid_9 <= valid_8;
 
-			// 7th Cycle
+			// 10th Cycle
 			result_6[255:0] <= {sum4_5[63:0], result_5[191:0]};
 			sum5_6[67:0] <= sum4_5[130:64] + T4K_L_5;
 			upSum_6 <= upSum_5;
 
-			valid_6 <= valid_5;
+			valid_10 <= valid_9;
 
-			// 8th Cycle
+			// 11th Cycle (Final)
 			P[511:0] <= {(upSum_6 + sum5_6[67:64]),sum5_6[63:0],result_6[255:0]};
 
-			out_valid <= valid_6;
+			out_valid <= valid_10;
     		
     	end 
 	end 

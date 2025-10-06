@@ -25,9 +25,7 @@ module karatsuba32(
 	input wire reset,
 	input wire [63:0] Xin,
 	input wire [63:0] Yin,
-	output reg [127:0] P,
-	output reg [63:0] high, low,
-	output reg [64:0] mid
+	output reg [127:0] P
     );
     
     wire [63:0] P00, P11;
@@ -39,8 +37,8 @@ module karatsuba32(
     reg [63:0] P00_r, P11_r;
     reg [65:0] P10_r;
     
-    //reg [63:0] high, low;
-    //reg [64:0] mid;
+    reg [63:0] high, low;
+    reg [64:0] mid;
     
     always @(posedge clock) begin
     	if(reset) begin

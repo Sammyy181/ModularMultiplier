@@ -27,11 +27,7 @@ module foldKaratsuba(
     input  wire [127:0] X,
     input  wire [64:0]  X1X0,
     output reg  [383:0] P,
-    output reg          out_valid,
-    output reg [127:0] result_4,
-    output reg [129:0] sum_1,
-    output reg [127:0] P00_2,
-    output reg [128:0] T1K_2
+    output reg          out_valid
 );
 	
 	// Short Path registers and Y component
@@ -39,6 +35,7 @@ module foldKaratsuba(
 	reg [127:0] X_i;
 	wire [127:0] Y;
 	wire [64:0] Y1Y0, Y2Y0, Y2Y1, Y3Y0, Y3Y1;
+    reg valid_0;
 	
 	assign Y = 128'h1c424d77f1b750a99cc6df2b0ee713a2;
 	assign Y1Y0 = 65'hb9092ca3009e644b;
@@ -51,43 +48,42 @@ module foldKaratsuba(
     wire [127:0] P00, P11;
     reg [129:0] S10;
     wire [128:0] S20, S21, S30, S31;
-    reg valid_0;
-    
-    // 1.1, 1.2, 1.3 Cycles
+    reg valid_1;
+
+    // 2nd, 3rd and 4th Cycles
     reg [129:0] S101, S102, S103;
     reg [127:0] P00_r, P11_r;
     reg [128:0] S20_r, S21_r, S30_r, S31_r;
-    
-    reg valid_1, valid_11, valid_12, valid_13;
+    reg valid_2, valid_3, valid_4;
 
-    // 2nd Cycle
+    // 5th Cycle
     reg [127:0] P00_1, P11_1;
     reg [128:0] P1P0;
     reg [128:0] M20, M21, M30;
     reg [127:0] T4K_1;
     reg [129:0] S10_1;
-    reg valid_2;
+    reg valid_5;
 
-    // 3rd Cycle
-    //reg [127:0] P00_2;
-    reg [128:0] T2K_2;//T1K_2
+    // 6th Cycle
+    reg [127:0] P00_2;
+    reg [128:0] T2K_2, T1K_2;
     reg [127:0] T4K_2;
     reg [129:0] T3K_2;
-    reg valid_3;
+    reg valid_6;
 
-    // 4th Cycle
+    // 7th Cycle
     reg [63:0] result_3;
-    //reg [129:0] sum_1;
+    reg [129:0] sum_1;
     reg [63:0] T2K_L;
     reg [65:0] sum_3;
     reg [127:0] sum_4;
-    reg valid_4;
+    reg valid_7;
 
-    // 5th Cycle
-    //reg [127:0] result_4;
+    // 8th Cycle
+    reg [127:0] result_4;
     reg [66:0] sum_2;
     reg [191:0] upSum_4;
-    reg valid_5;
+    reg valid_8;
     
     karatsuba32 K00(.clock(clock),.reset(reset),.Xin(X_i[63:0]),.Yin(Y[63:0]),.P(P00));
     karatsuba32 K11(.clock(clock),.reset(reset),.Xin(X_i[127:64]),.Yin(Y[127:64]),.P(P11));
@@ -106,6 +102,10 @@ module foldKaratsuba(
             valid_2 <= 1'b0;
             valid_3 <= 1'b0;
             valid_4 <= 1'b0;
+            valid_5 <= 1'b0;
+            valid_6 <= 1'b0;
+            valid_7 <= 1'b0;
+            valid_8 <= 1'b0;
         end
         else begin
 
@@ -119,15 +119,15 @@ module foldKaratsuba(
             S10[129:0] <= X1X0_i[64:0] * Y1Y0[64:0];
             valid_1 <= valid_0;
             
-            // 1.1 Cycle
+            // 2nd Cycle
             S101[129:0] <= S10[129:0];
-            valid_11 <= valid_1;
+            valid_2 <= valid_1;
             
-            // 1.2 Cycle 
+            // 3rd Cycle 
             S102[129:0] <= S101[129:0];
-            valid_12 <= valid_11;
+            valid_3 <= valid_2;
             
-            // 1.3 Cycle
+            // 4th Cycle
             S103[129:0] <= S102[129:0];
             
             P00_r <= P00;
@@ -138,9 +138,9 @@ module foldKaratsuba(
             S30_r <= S30;
             S31_r <= S31;
             
-            valid_13 <= valid_12;
+            valid_4 <= valid_3;
 
-            // 2nd Cycle
+            // 5th Cycle
             P1P0[128:0] <= P11[127:0] + P00[127:0];
             M20[128:0] <= S20[128:0] - P00[127:0];
             M21[128:0] <= S21[128:0] - P11[127:0];
@@ -151,9 +151,9 @@ module foldKaratsuba(
             P11_1 <= P11;
             S10_1 <= S103;
 
-            valid_2 <= valid_13;
+            valid_5 <= valid_4;
 
-            // 3rd Cycle
+            // 6th Cycle
             T1K_2[128:0] <= S10_1[129:0] - P1P0[128:0];
             T2K_2[128:0] <= M20[128:0] + P11_1[127:0];
             T3K_2[129:0] <= M30[128:0] + M21[128:0];
@@ -161,9 +161,9 @@ module foldKaratsuba(
             P00_2 <= P00_1;
             T4K_2 <= T4K_1;
 
-            valid_3 <= valid_2;
+            valid_6 <= valid_5;
 
-            // 4th Cycle
+            // 7th Cycle
             result_3[63:0] <= P00_2[63:0];
             sum_1[129:0] <= T1K_2[128:0] + P00_2[127:64];
             sum_3[65:0] <= T2K_2[128:64] + T3K_2[63:0];
@@ -171,19 +171,19 @@ module foldKaratsuba(
 
             T2K_L[63:0] <= T2K_2[63:0];
 
-            valid_4 <= valid_3;
+            valid_7 <= valid_6;
 
-            // 5th Cycle
+            // 8th Cycle
             result_4[127:0] <= {sum_1[63:0], result_3[63:0]};
             sum_2[66:0] <= T2K_L[63:0] + sum_1[129:64];
             upSum_4[191:0] <= {(sum_4[127:0] + sum_3[65:64]), sum_3[63:0]};
 
-            valid_5 <= valid_4;
+            valid_8 <= valid_7;
 
             // Final Cycle
 
             P[383:0] <= {(upSum_4[191:0] + sum_2[66:64]), sum_2[63:0], result_4[127:0]};
-            out_valid <= valid_5;
+            out_valid <= valid_8;
 
         end
     end
