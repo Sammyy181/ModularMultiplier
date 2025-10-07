@@ -25,5 +25,3 @@ Specifics:
 - Latency (Cycles) - 36
 
 The current implementation does not have a correctly functioning UART Receiver and Transmitter module. However, it implements the Modular Multiplication itself correctly.
-
-P.S - The Repository is still work-in-progress, not fully functional yet :)
