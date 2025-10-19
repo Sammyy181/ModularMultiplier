@@ -26,10 +26,10 @@ Specifics:
 
 The architecture implemented here was as shown below:
 
-![Microarchitecture of Modular Multiplier][Images/MM_Implementation.jpeg]
+![Microarchitecture of Modular Multiplier][Images/MM_implementation.jpeg]
 
 The Karatsuba Multiplier had the following structure:
 
-![Karatsuba Multiplier Structure][Images_Karatsuba_Multiplier.jpeg]
+![Karatsuba Multiplier Structure][Images/Karatsuba_Multiplier.jpeg]
 
 
