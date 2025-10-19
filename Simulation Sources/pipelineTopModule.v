@@ -5,7 +5,7 @@
 // 
 // Create Date: 05.10.2025 22:24:39
 // Design Name: 
-// Module Name: pipelineTopModule
+// Module Name: pipelineTopModule_tb
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -19,14 +19,14 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module pipelineTopModule();
+module pipelineTopModule_tb();
 
 	reg clock, reset, in_valid;
 	reg [255:0] X, Y;
 	wire [255:0] Q;
 	wire out_valid;
 	
-	topModule UUT(.clock(clock),.reset(reset),.in_valid(in_valid),.Xin(X),.Yin(Y),.Q(Q),.out_valid(out_valid));
+	topModule UUT(.clock(clock),.reset(reset),.in_valid(in_valid),.Xin(X),.Yin(Y),.out_valid(out_valid),.Q(Q));
 	
 	initial begin
 		clock <= 1'b0;
@@ -103,5 +103,4 @@ module pipelineTopModule();
 		if(Q == 256'hd77d2621794bd6c0fa02fcd2bbf083c8c63f648ae8943bb6a6f44bfd41a87642)
 			$display("Product 10 is correct");
 	end
-
 endmodule

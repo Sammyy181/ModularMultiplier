@@ -61,9 +61,8 @@ class ModularMultiplier():
         
         C0PH = C0 * P0_H
         
-        #print(f"C0PH = {hex(C0PH)[2:]}")
-        
         self.P1 = C0PH + P0_L
+        #print(f"redP = {hex(C0PH)[2:]}")
 
         #print(f"Value after first folding - {hex(self.P1)[2:]}")
         #print(f"coarseGrainlow = {hex(self.P1)[-64:]}")
@@ -126,6 +125,18 @@ class ModularMultiplier():
         self.Q = Q1 if Q2<0 else Q2
         #print(f"Q2: {Q2}")
         #print(f"Modulus according to paper: {hex(self.Q)[2:]}")
+
+def to_little_endian(hex_str):
+    hex_str = hex_str.strip().replace(" ", "").replace("\n", "")
+    
+    if len(hex_str) % 2 != 0:
+        raise ValueError("Hex string length must be even")
+    
+    bytes_list = [hex_str[i:i+2] for i in range(0, len(hex_str), 2)]
+    
+    little_endian_bytes = bytes_list[::-1]
+    
+    return "".join(little_endian_bytes)
     
 def main():
     random.seed(42)
@@ -138,21 +149,23 @@ def main():
         bitwidth += 1
     
     modulus = int(binary_modulus, 2)
-    #print(f"Modulus - {hex(modulus)[2:]}")
     
     sample = ModularMultiplier(modulus)
-    #Y = X = (2**256) - 1
-    #X = int("1000800200100080020010008002001000800200100080020010008002001000",16)
-    #Y = int("0080020010008002001000001000800200100080020010008002001000800200",16)
 
     #print(f"Values\nX: {X}\nY: {Y}")
 
-    for i in range(2):
+    for i in range(10):
         X = random.getrandbits(256)
         Y = random.getrandbits(256)
+        le_X = to_little_endian(hex(X)[2:])
+        le_Y = to_little_endian(hex(Y)[2:])
+
         print(f"Iteration No {i}")
         print(f"X in hex: {hex(X)}")
         print(f"Y in hex: {hex(Y)}")
+        print(f"Little Endian X - {le_X}")
+        print(f"Little Endian Y - {le_Y}")
+        print(f"Little Endian Combined - {le_X + le_Y}")
         calculated_mod = (X*Y) % modulus
         calculated_mod = hex(calculated_mod)
         print(f"Theoretical Q = {calculated_mod[2:]}")

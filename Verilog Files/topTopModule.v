@@ -21,24 +21,30 @@
 
 
 module topTopModule(
-	input clock,
-	input reset_all,
-	input Rx,
-    input en_Rx,
-    //input start_Tx,
-    input start_MM,
-    //output Tx,
-    //output Tx_done,
-    output wire MM_done,
-    output Rx_done
+	input wire clock,
+	input wire reset_all,
+	input wire en_Rx,
+	input wire Rx,
+	output wire ready,
+    output wire out_valid
     );
     
     wire [255:0] X, Y;
+    reg in_valid;
+    reg done;
     wire [255:0] Q;
     
-    topModule top(.clock(clock),.rst(reset_all),.X(X),.Y(Y),.start(start_MM),.Q(Q),.done(MM_done));
-	//Tx_top TxD(.clock(clock),.start(start_Tx),.reset(reset_all),.Q(Q),.done(Tx_done),.Tx(Tx));
-	Rx_top RxD(.clock(clock),.en_Rx(en_Rx),.reset(reset_all),.Rx(Rx),.X(X),.Y(Y),.ready(Rx_done));
-	ila_0 debugILA(.clk(clock), .probe0(X), .probe1(Y), .probe2(Q),.probe3(MM_done));
-
+    Rx_top RxD(.clock(clock),.en_Rx(en_Rx),.reset(reset_all),.Rx(Rx),.X(X),.Y(Y),.ready(ready));
+    topModule top(.clock(clock),.reset(reset_all),.Xin(X),.Yin(Y),.in_valid(in_valid),.out_valid(out_valid),.Q(Q),
+    		.Ph(Ph),.product(product));
+	ila_0 debugILA(.clk(clock), .probe0(X), .probe1(Y), .probe2(Q),.probe3(ready));
+	
+	always @(posedge clock) begin
+		if(reset_all) begin
+			in_valid <= 1'b0;
+		end
+		else if(ready) begin
+			in_valid <= 1'b1;
+		end	
+	end
 endmodule

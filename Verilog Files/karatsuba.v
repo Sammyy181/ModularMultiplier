@@ -48,7 +48,7 @@ module karatsuba(
     reg [128:0] P1P0, P2P0, P2P1, P3P0, P3P1, P3P2;
     reg [129:0] S10, S20, S21, S30, S31, S32;
     reg [127:0] P11_1, P22_1, T6K_1, T0K_1; 
-    reg valid_t;
+    reg valid_5;
     
     //6th Cycle
     reg [128:0] T1K_2, T5K_2, M21, M30, M31, M20;

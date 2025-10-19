@@ -60,7 +60,7 @@ module topModule(
 	reg valid_1;
 
 	foldKaratsuba FK(.clock(clock),.reset(reset),.in_valid(redIn_valid),.X(Ph),.X1X0(X1X0),.P(redP),.out_valid(red_valid));
-
+	
 	// Cycle 2
 	reg [383:0] Plow_2;
 	reg valid_2;
@@ -176,6 +176,8 @@ module topModule(
 		if(reset) begin
 			Q <= 256'b0;
 			out_valid <= 1'b0;
+			reductionOut <= 385'b0;
+			coarseGrainSum <= 260'b0;
 			X <= 256'b0;
 			Y <= 256'b0;
 		end
@@ -190,7 +192,7 @@ module topModule(
 			X1X0 <= product[511:448] + product[447:384];
 			Plow_1 <= product[383:0];
 			redIn_valid <= prod_valid;
-	
+			
 			// 2nd Cycle
 			Plow_2 <= Plow_1;
 			valid_2 <= redIn_valid;
@@ -227,28 +229,28 @@ module topModule(
 			Plow_10 <= Plow_9;
 			valid_10 <= valid_9;
 			
-			// 10.1 Cycle
+			// 11th Cycle
 			Plow_11 <= Plow_10;
 			valid_11 <= valid_10;
-	
-			// 11th Cycle
+			
+			// 12th Cycle
 			foldLow_11 <= Plow_11[191:0] + redP[191:0];
 			foldHigh_11 <= Plow_11[383:192] + redP[383:192];
 			valid_12 <= valid_11;
 	
-			// 12th Cycle 
+			// 13th Cycle 
 			reductionOut <= {foldHigh_11[192:0]+foldLow_11[192],foldLow_11[191:0]};
 			valid_13 <= valid_12;
 			
-			// 13th Cycle
+			// 14th Cycle
 			coarseGrainlow_1 <= reductionOut[255:0];
 			valid_14 <= valid_13;
 			
-			// 14th Cycle
+			// 15th Cycle
 			coarseGrainlow_2 <= coarseGrainlow_1;
 			valid_15 <= valid_14;
 			
-			// 15th Cycle
+			// 16th Cycle
 			cgSum0 <= coarseGrainlow_2 + CG1;
 			cgSum1 <= CG2 + CG3;
 			cgSum2 <= CG4 + CG5;
@@ -259,46 +261,45 @@ module topModule(
 			cgSum7 <= CG14 + CG15;
 			valid_16 <= valid_15;
 			
-			// 16th Cycle
+			// 17th Cycle
 			cgSum10 <= cgSum0 + cgSum1;
 			cgSum11 <= cgSum2 + cgSum3;
 			cgSum12 <= cgSum4 + cgSum5;
 			cgSum13 <= cgSum6 + cgSum7;
 			valid_17 <= valid_16;
 			
-			// 17th Cycle
+			// 18th Cycle
 			cgSum20 <= cgSum10 + cgSum11;
 			cgSum21 <= cgSum12 + cgSum13;
 			valid_18 <= valid_17;
 			
-			// 18th Cycle
+			// 19th Cycle
 			coarseGrainSum <= cgSum20 + cgSum21;
 			valid_19 <= valid_18;
 			
-			// 19th Cycle
+			// 20th Cycle
 			coarseGrainSum1 <= coarseGrainSum;
 			valid_20 <= valid_19;
 			
-			// 20th Cycle
+			// 21st Cycle
 			coarseGrainSum2 <= coarseGrainSum1;
 			valid_21 <= valid_20;
 			
-			// 21st Cycle
+			// 22nd Cycle
 			fineGrainH1[129:0] <= coarseGrainSum2[259:130] - MK1[259:130];
 			fineGrainH2[129:0] <= coarseGrainSum2[259:130] - MK2[259:130];
 			{borrowL1, fineGrainL1[129:0]} <= {1'b0, coarseGrainSum2[129:0]} - {1'b0, MK1[129:0]};
 			{borrowL2, fineGrainL2[129:0]} <= {1'b0, coarseGrainSum2[129:0]} - {1'b0, MK2[129:0]};
 			valid_22 <= valid_21;
 			
-			// 22nd Cycle
+			// 23rd Cycle
 			fineGrain1 <= {fineGrainH1 - borrowL1, fineGrainL1};
 			fineGrain2 <= {fineGrainH2 - borrowL2, fineGrainL2};
 			valid_23 <= valid_22;
 			
-			// 23rd Cycle
+			// Final Cycle
 			Q[255:0] <= fineGrain2[259]? fineGrain1[255:0] : fineGrain2[255:0];
 			out_valid <= valid_23;
-			
 		end
 	end
 endmodule
