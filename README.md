@@ -24,4 +24,12 @@ Specifics:
 - Throughput - 25.6 GB/s
 - Latency (Cycles) - 36
 
-The current implementation does not have a correctly functioning UART Receiver and Transmitter module. However, it implements the Modular Multiplication itself correctly.
+The architecture implemented here was as shown below:
+
+![Microarchitecture of Modular Multiplier][Images/MM_Implementation.jpeg]
+
+The Karatsuba Multiplier had the following structure:
+
+![Karatsuba Multiplier Structure][Images_Karatsuba_Multiplier.jpeg]
+
+
