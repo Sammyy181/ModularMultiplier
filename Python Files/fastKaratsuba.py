@@ -1,12 +1,32 @@
 import math
 
+def twoComp(num):
+    if num >= 0:
+        raise ValueError("Input must be negative")
+
+    mag = abs(num)
+
+    # minimal bits to represent the magnitude
+    bits = ((mag.bit_length() + 3) // 4) * 4
+    hex_digits = bits // 4
+
+    tc = (1 << bits) - mag
+
+    return '1' + format(tc, f'0{hex_digits}x')
+
+
 def getHex(decDict):
         
         hexDict = {}
         
         partMults = decDict.keys()
         for dec in partMults:
-            hexDict[dec] = hex(decDict[dec])[2:]
+            if decDict[dec] > 0:
+                hexDict[dec] = '0' + hex(decDict[dec])[2:]
+            elif decDict[dec] == 0:
+                hexDict[dec] = 0
+            else:
+                hexDict[dec] = twoComp(decDict[dec])
         
         return hexDict
     
@@ -240,10 +260,101 @@ def findParts(X: int, Y: int):
     print("\nZ Values:")
     for key in sorted(z_values.keys(), key=lambda x: int(x[1:])):
         print(f"{key} = {z_values[key]}")
+    
+    
+    m_values = {
+        'M6': M6, 'M8': M8, 'M9': M9, 'M10': M10, 'M11': M11, 'M12': M12,
+        'M13': M13, 'M14': M14, 'M15': M15, 'M16': M16, 'M17': M17,
+        'M18_1': M18_1, 'M18_2': M18_2, 'M19': M19,
+        'M20_1': M20_1, 'M20_2': M20_2,
+        'M21_1': M21_1, 'M21_2': M21_2,
+        'M22_1': M22_1, 'M22_2': M22_2,
+        'M23_1': M23_1, 'M23_2': M23_2,
+        'M24_1': M24_1, 'M24_2': M24_2,
+        'M25_1': M25_1, 'M25_2': M25_2,
+        'M26_1': M26_1, 'M26_2': M26_2,
+        'M27_1': M27_1, 'M27_2': M27_2,
+        'M28_1': M28_1, 'M28_2': M28_2,
+        'M29_1': M29_1, 'M29_2': M29_2,
+        'M30_1': M30_1, 'M30_2': M30_2, 'M30_3': M30_3,
+        'M31_1': M31_1, 'M31_2': M31_2,
+        'M32_1': M32_1, 'M32_2': M32_2,
+        'M33_1': M33_1, 'M33_2': M33_2,
+        'M34_1': M34_1, 'M34_2': M34_2,
+        'M35_1': M35_1, 'M35_2': M35_2,
+        'M36_1': M36_1, 'M36_2': M36_2,
+        'M37_1': M37_1, 'M37_2': M37_2,
+        'M38_1': M38_1, 'M38_2': M38_2,
+        'M39_1': M39_1, 'M39_2': M39_2,
+        'M40_1': M40_1, 'M40_2': M40_2,
+        'M41': M41,
+        'M42_1': M42_1, 'M42_2': M42_2,
+        'M43': M43, 'M44': M44, 'M45': M45, 'M46': M46, 'M47': M47,
+        'M48': M48, 'M49': M49, 'M50': M50, 'M51': M51, 'M52': M52,
+        'M54': M54
+    }
+    m_values = getHex(m_values)
+
+    # Print all M values
+    print("\nM Values:")
+    for key in sorted(m_values.keys(), key=lambda x: (int(x.split('_')[0][1:]), x.split('_')[1] if '_' in x else '')):
+        print(f"{key} = {m_values[key]}")
+    
+    print(f"S80_0 = {hex(S80_0)[2:]}")
+    print(f"S106_48 = {hex(S106_48)[2:]}")
+    print(f"S122_72 = {hex(S122_72)[2:]}")
+    print(f"S139_88 = {hex(S139_88)[2:]}")
+    print(f"S155_104 = {hex(S155_104)[2:]}")
+    print(f"S171_120 = {hex(S171_120)[2:]}")
+    print(f"S186_136 = {hex(S186_136)[2:]}")
+    print(f"S195_144 = {hex(S195_144)[2:]}")
+    print(f"S203_160 = {hex(S203_160)[2:]}")
+    print(f"S211_168 = {hex(S211_168)[2:]}")
+    print(f"S219_176 = {hex(S219_176)[2:]}")
+    print(f"S227_184 = {hex(S227_184)[2:]}")
+    print(f"S235_192 = {hex(S235_192)[2:]}")
+    print(f"S243_200 = {hex(S243_200)[2:]}")
+    print(f"S251_208 = {hex(S251_208)[2:]}")
+    print(f"S259_216 = {hex(S259_216)[2:]}")
+    print(f"S267_224 = {hex(S267_224)[2:]}")
+    print(f"S275_232 = {hex(S275_232)[2:]}")
+    print(f"S283_240 = {hex(S283_240)[2:]}")
+    print(f"S291_248 = {hex(S291_248)[2:]}")
+    print(f"S299_256 = {hex(S299_256)[2:]}")
+    print(f"S307_264 = {hex(S307_264)[2:]}")
+    print(f"S315_272 = {hex(S315_272)[2:]}")
+    print(f"S323_280 = {hex(S323_280)[2:]}")
+    print(f"S331_288 = {hex(S331_288)[2:]}")
+    print(f"S339_296 = {hex(S339_296)[2:]}")
+    print(f"S347_304 = {hex(S347_304)[2:]}")
+    print(f"S355_312 = {hex(S355_312)[2:]}")
+    print(f"S363_320 = {hex(S363_320)[2:]}")
+    print(f"S378_328 = {hex(S378_328)[2:]}")
+    print(f"S387_336 = {hex(S387_336)[2:]}")
+    print(f"S403_352 = {hex(S403_352)[2:]}")
+    print(f"S418_368 = {hex(S418_368)[2:]}")
+    print(f"S434_384 = {hex(S434_384)[2:]}")
+    print(f"S450_400 = {hex(S450_400)[2:]}")
+    print(f"S465_416 = {hex(S465_416)[2:]}")
+    print(f"S489_432 = {hex(S489_432)[2:]}")
+    print(f"S511_456 = {hex(S511_456)[2:]}")
+    
+    print(f"S123_0 = {hex(S123_0)[2:]}")
+    print(f"S187_88 = {hex(S187_88)[2:]}")
+    print(f"S220_144 = {hex(S220_144)[2:]}")
+    print(f"S252_184 = {hex(S252_184)[2:]}")
+    print(f"S284_216 = {hex(S284_216)[2:]}")
+    print(f"S316_248 = {hex(S316_248)[2:]}")
+    print(f"S348_280 = {hex(S348_280)[2:]}")
+    print(f"S388_312 = {hex(S388_312)[2:]}")
+    print(f"S451_352 = {hex(S451_352)[2:]}")
+    print(f"S511_416 = {hex(S511_416)[2:]}")
     """
     
+    print(f"P = {hex(product)[2:]}")
+
     #return z_values
-    return P_theory, product
+    #return P_theory, product
 
 def check(X: int, Y:int):
     
@@ -320,23 +431,70 @@ def check(X: int, Y:int):
     Z58 = extract_mult(28, 30)
     Z60 = extract_mult(30, 30)
     
-    productKaratsuba = (Z0 + (Z2  << (2*8)) + (Z3  << (3*8)) + (Z4  << (4*8)) + (Z5  << (5*8)) + (Z6  << (6*8)) + (Z7  << (7*8)) + (Z8  << (8*8)) + (Z9  << (9*8)) + (Z10 << (10*8)) + (Z11 << (11*8)) + (Z12 << (12*8)) + (Z13 << (13*8)) + (Z14 << (14*8)) + (Z15 << (15*8)) + (Z16 << (16*8)) + (Z17 << (17*8)) + (Z18 << (18*8)) + (Z19 << (19*8))  + (Z21 << (21*8)) + (Z22 << (22*8)) + (Z23 << (23*8)) + (Z24 << (24*8)) + (Z25 << (25*8)) + (Z26 << (26*8)) + (Z27 << (27*8)) + (Z28 << (28*8)) + (Z29 << (29*8)) + (Z30 << (30*8)) + (Z31 << (31*8)) + (Z32 << (32*8)) + (Z33 << (33*8)) + (Z34 << (34*8)) + (Z35 << (35*8)) + (Z36 << (36*8)) + (Z37 << (37*8)) + (Z38 << (38*8)) + (Z39 << (39*8)) + (Z40 << (40*8)) + (Z41 << (41*8)) + (Z42 << (42*8)) + (Z43 << (43*8)) + (Z44 << (44*8)) + (Z45 << (45*8)) + (Z46 << (46*8)) + (Z47 << (47*8)) + (Z48 << (48*8)) + (Z49 << (49*8)) + (Z50 << (50*8)) + (Z51 << (51*8)) + (Z52 << (52*8)) + (Z53 << (53*8)) + (Z54 << (54*8)) + (Z55 << (55*8)) + (Z56 << (56*8)) + (Z57 << (57*8)) + (Z58 << (58*8)) + (Z60 << (60*8)))
+    productKaratsuba = (Z0 + (Z2  << (2*8)) + (Z3  << (3*8)) + (Z4  << (4*8)) + (Z5  << (5*8)) + (Z6  << (6*8)) + (Z7  << (7*8)) + (Z8  << (8*8)) + (Z9  << (9*8)) + (Z10 << (10*8)) + (Z11 << (11*8)) + (Z12 << (12*8)) + (Z13 << (13*8)) + (Z14 << (14*8)) + (Z15 << (15*8)) + (Z16 << (16*8)) + (Z17 << (17*8)) + (Z18 << (18*8)) + (Z19 << (19*8))  + (Z20 << (20*8)) + (Z21 << (21*8)) + (Z22 << (22*8)) + (Z23 << (23*8)) + (Z24 << (24*8)) + (Z25 << (25*8)) + (Z26 << (26*8)) + (Z27 << (27*8)) + (Z28 << (28*8)) + (Z29 << (29*8)) + (Z30 << (30*8)) + (Z31 << (31*8)) + (Z32 << (32*8)) + (Z33 << (33*8)) + (Z34 << (34*8)) + (Z35 << (35*8)) + (Z36 << (36*8)) + (Z37 << (37*8)) + (Z38 << (38*8)) + (Z39 << (39*8)) + (Z40 << (40*8)) + (Z41 << (41*8)) + (Z42 << (42*8)) + (Z43 << (43*8)) + (Z44 << (44*8)) + (Z45 << (45*8)) + (Z46 << (46*8)) + (Z47 << (47*8)) + (Z48 << (48*8)) + (Z49 << (49*8)) + (Z50 << (50*8)) + (Z51 << (51*8)) + (Z52 << (52*8)) + (Z53 << (53*8)) + (Z54 << (54*8)) + (Z55 << (55*8)) + (Z56 << (56*8)) + (Z57 << (57*8)) + (Z58 << (58*8)) + (Z60 << (60*8)))
     
     print(f"Karatsuba Product: {hex(productKaratsuba)[2:]}")
 
  
 # Example usage
 if __name__ == "__main__":
-    # Example 256-bit numbers
-    X = 0x123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0
-    Y = 0xFEDCBA9876543210FEDCBA9876543210FEDCBA9876543210FEDCBA9876543210
+    # Test vectors from testbench
+    test_cases = [
+        (
+            0x0123456789ABCDEF_FEDCBA9876543210_0F0F0F0F0F0F0F0F_F0F0F0F0F0F0F0F0,
+            0x89ABCDEF01234567_76543210FEDCBA98_A5A5A5A5A5A5A5A5_5A5A5A5A5A5A5A5A
+        ),
+        (
+            0xFFFFFFFFFFFFFFFF_0000000000000000_1234567890ABCDEF_0FEDCBA098765432,
+            0x0000000000000001_FFFFFFFFFFFFFFFF_FFFFFFFFFFFFFFFE_0000000000000002
+        ),
+        (
+            0xAAAAAAAAAAAAAAAA_5555555555555555_DEADBEEFCAFEBABE_0123456789ABCDEF,
+            0x13579BDF2468ACE0_0F0E0D0C0B0A0908_FEDCBA9876543210_1111111111111111
+        ),
+        (
+            0x0001020304050607_08090A0B0C0D0E0F_1011121314151617_18191A1B1C1D1E1F,
+            0xFFEEDDCCBBAA9988_7766554433221100_FF00FF00FF00FF00_00FF00FF00FF00FF
+        ),
+        (
+            0x7FFFFFFFFFFFFFFF_8000000000000000_0000000000000001_FFFFFFFFFFFFFFFE,
+            0x3C3C3C3C3C3C3C3C_C3C3C3C3C3C3C3C3_AAAAAAAAAAAAAAAA_5555555555555555
+        ),
+        (
+            0xCAFEBABEDEADBEEF_FEEDFACE12345678_87654321ABCDEF01_0BADF00DDEADC0DE,
+            0x0D15EA5EBAADF00D_0123456789ABCDEF_FFFFFFFFFFFFFFFF_0000000000000000
+        ),
+        (
+            0xFFFFFFFF00000000_FFFFFFFF00000000_00000000FFFFFFFF_00000000FFFFFFFF,
+            0x1111111122222222_3333333344444444_5555555566666666_7777777788888888
+        ),
+        (
+            0x13579BDF13579BDF_2468ACE02468ACE0_0F1E2D3C4B5A6978_8697A5B4C3D2E1F0,
+            0xFEDCBA9876543210_0123456789ABCDEF_89ABCDEF01234567_76543210FEDCBA98
+        ),
+        (
+            0xAAAAAAAA00000000_55555555FFFFFFFF_DEADBEEF00000000_CAFEBABEFFFFFFFF,
+            0x00000000FFFFFFFF_FFFFFFFF00000000_123456789ABCDEF0_0FEDCBA987654321
+        ),
+        (
+            0x0123456789ABCDEF_0011223344556677_8899AABBCCDDEEFF_FFEEDDCCBBAA9988,
+            0xF0F1F2F3F4F5F6F7_0807060504030201_1020304050607080_90A0B0C0D0E0F000
+        )
+    ]
     
-    Pth, Pr = findParts(X, Y)
-    #check(X, Y)
+    print("=" * 80)
+    print("Karatsuba 256-bit Multiplier - 10 Test Cases")
+    print("=" * 80)
     
-    print(f"Theoretical P: {hex(Pth)[2:]}")
-    print(f"Real P: {hex(Pr)[2:]}")
-    print(f"Difference: {Pth - Pr}")
-    
-#121fa00ad97d742447accb140713b71c4d066a168ca9fa68b4c91d2664403d8ac415061be0df1e2832c22512b145554458fcb20785af1222236d88fe5618cf01
-#121fa00ad77d742247acc9140513b7447d39f21d32a9fa66b2c71b2660403d88c4150419dedb98668e87db10b145554458fab20783af1222236d88fe5618cf00
+    for i, (X, Y) in enumerate(test_cases):
+        print(f"\nTest Case {i}:")
+        print(f"X = 0x{X:064X}")
+        print(f"Y = 0x{Y:064X}")
+        
+        # Calculate expected product
+        expected = X * Y
+        #print(f"Product = 0x{expected:0128X}")
+        
+        # Also run through the findParts function to verify
+        findParts(X, Y)
+        print("-" * 80)
