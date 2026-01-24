@@ -37,18 +37,6 @@ module topModule(
 	reg [255:0] X, Y;
 
 	karatsuba K1(.clock(clock),.in_valid(in_valid),.Xin(X),.Yin(Y),.reset(reset),.P(product),.out_valid(prod_valid));
-
-	// Reduction Multiplication 
-	wire [127:0] Y_;
-	wire [64:0] Y1Y0, Y2Y0, Y2Y1, Y3Y0, Y3Y1;
-	
-	assign Y_ = 128'h1c424d77f1b750a99cc6df2b0ee713a2;
-	assign Y1Y0 = 65'hb9092ca3009e644b;
-	assign Y2Y0 = 65'hd2dd30d1fd8adefd;
-	assign Y2Y1 = 65'h52589f1ee05b1c04;
-	assign Y3Y0 = 65'h12faca19e5664357a;
-	assign Y3Y1 = 65'haf280feb39347281;
-	
 	
 	// Cycle 1
 	reg redIn_valid;

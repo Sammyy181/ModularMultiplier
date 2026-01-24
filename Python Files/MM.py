@@ -149,6 +149,7 @@ def main():
         bitwidth += 1
     
     modulus = int(binary_modulus, 2)
+    print(f"Modulus - {hex(modulus)[2:]}")
     
     sample = ModularMultiplier(modulus)
 
