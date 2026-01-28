@@ -255,7 +255,7 @@ if __name__ == "__main__":
         0x80000000000000000000000000000000,  # Test 3: Single bit set in MSB
         0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,  # Test 4: Alternating bits pattern 1
         0x55555555555555555555555555555555,  # Test 5: Alternating bits pattern 2
-        0x00000000000000000FFFFFFFFFFFFFFFF,  # Test 6: Lower 64 bits set
+        0x0000000000000000FFFFFFFFFFFFFFFF,  # Test 6: Lower 64 bits set
         0xFFFFFFFFFFFFFFFF0000000000000000,  # Test 7: Upper 64 bits set
         0xF0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0,  # Test 8: Checkerboard pattern by nibbles
         0x0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F,  # Test 9: Inverse checkerboard pattern
@@ -263,7 +263,7 @@ if __name__ == "__main__":
         0xFFFF0000FFFF0000FFFF0000FFFF0000,  # Test 11: All bits set in 16-bit segments
         0x0123456789ABCDEF0FEDCBA987654321,  # Test 12: Sequential increments
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC5,  # Test 13: Large prime-like number
-        0x00000000000000000FFFFFFFFFFFFFFFF,  # Test 14: Power of 2 minus 1
+        0x0000000000000000FFFFFFFFFFFFFFFF,  # Test 14: Power of 2 minus 1
         0x00FFFFFF00FFFFFF00FFFFFF00FFFFFF,  # Test 15: Multiple 24-bit segment boundaries
         0x7FFFFFFFFFFFFFFF8000000000000000,  # Test 16: Signed/unsigned boundaries
         0x000000FFFFFFFFFF000000FFFFFFFFFF,  # Test 17: Consecutive ones in different positions

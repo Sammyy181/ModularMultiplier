@@ -59,7 +59,7 @@ module constKaratsuba_tb();
         Y_vec[5] = 128'h55555555555555555555555555555555;
 
         // Test 7: Lower 64 bits set, upper 64 bits clear
-        Y_vec[6] = 128'h00000000000000000FFFFFFFFFFFFFFFF;
+        Y_vec[6] = 128'h0000000000000000FFFFFFFFFFFFFFFF;
 
         // Test 8: Upper 64 bits set, lower 64 bits clear
         Y_vec[7] = 128'hFFFFFFFFFFFFFFFF0000000000000000;
@@ -83,7 +83,7 @@ module constKaratsuba_tb();
         Y_vec[13] = 128'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC5;
 
         // Test 15: Power of 2 minus 1 (2^64 - 1 in lower half)
-        Y_vec[14] = 128'h00000000000000000FFFFFFFFFFFFFFFF;
+        Y_vec[14] = 128'h0000000000000000FFFFFFFFFFFFFFFF;
 
         // Test 16: Multiple 24-bit segment boundaries
         Y_vec[15] = 128'h00FFFFFF00FFFFFF00FFFFFF00FFFFFF;
