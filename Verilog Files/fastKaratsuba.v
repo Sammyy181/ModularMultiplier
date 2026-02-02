@@ -80,7 +80,7 @@ module fastKaratsuba(
     reg [80:0] S80_0S2;
     reg [57:0] S106_48S2;
     reg [56:0] S489_432S2; 
-    reg [54:0] S511_456S2;
+    reg [55:0] S511_456S2;
     reg [50:0] S139_88S2, S155_104S2, S171_120S2, S195_144S2, S387_336S2, S403_352S2;
     reg [49:0] S122_72S2, S186_136S2, S378_328S2, S418_368S2, S434_384S2, S450_400S2;
     reg [48:0] S465_416S2;
@@ -114,7 +114,7 @@ module fastKaratsuba(
 	wire [81:0] S434_384S2_sh = S434_384S2 << 32;
 	wire [97:0] S450_400S2_sh = S450_400S2 << 48;
 	wire [72:0] S489_432S2_sh = S489_432S2 << 16;
-	wire [94:0] S511_456S2_sh = S511_456S2 << 40;
+	wire [95:0] S511_456S2_sh = S511_456S2 << 40;
 	
     reg S2_valid;
 
@@ -171,7 +171,7 @@ module fastKaratsuba(
     // Cycle 3
     reg [123:0] S123_0S3;
     reg [98:0] S187_88S3, S451_352S3;
-    reg [94:0] S511_416S3;
+    reg [95:0] S511_416S3;
     reg [75:0] S220_144S3, S388_312S3;
     reg [67:0] S252_184S3, S284_216S3, S316_248S3, S348_280S3;
     
@@ -179,13 +179,13 @@ module fastKaratsuba(
     wire [107:0] S252_184S3_sh = S252_184S3 << 40;
     wire [99:0] S316_248S3_sh = S316_248S3 << 32;
     wire [107:0] S388_312S3_sh = S388_312S3 << 32;
-    wire [158:0] S511_416S3_sh = S511_416S3 << 64;
+    wire [159:0] S511_416S3_sh = S511_416S3 << 64;
     
     reg S3_valid;
 
     // Cycle 4
     reg [188:0] S188_0S4;
-    reg [158:0] S511_352S4;
+    reg [159:0] S511_352S4;
     reg [108:0] S253_144S4, S389_280S4;
     reg [100:0] S317_216S4;
     
@@ -197,7 +197,7 @@ module fastKaratsuba(
     // Cycle 5
     reg [254:0] S254_0S5;
     reg [173:0] S390_216S5;
-    reg [158:0] S511_352S5;
+    reg [159:0] S511_352S5;
     
     wire [389:0] S390_216S5_sh = S390_216S5 << 216;
 
@@ -205,9 +205,9 @@ module fastKaratsuba(
 
     // Cycle 6
     reg [391:0] S391_0S6;
-    reg [158:0] S511_352S6;
+    reg [159:0] S511_352S6;
     
-    wire [510:0] S511_352S6_sh = S511_352S6 << 352;
+    wire [511:0] S511_352S6_sh = S511_352S6 << 352;
 
     reg S6_valid;
 
@@ -429,6 +429,3 @@ module fastKaratsuba(
     end
 
 endmodule
-
-// X <= 256'h9132b63ef16287e4e9c349e03602f8ac10f1bc81448aaa9e66b2bc5b50c187fc;
-// Y <= 256'he27a984d654821d07fcd9eb1a7cad415366eb16f508ebad7b7c93acfe059a0ee

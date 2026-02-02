@@ -351,7 +351,7 @@ def findParts(X: int, Y: int):
     print(f"S511_416 = {hex(S511_416)[2:]}")
     """
     
-    print(f"P = {hex(product)[2:]}")
+    print(f"P = {hex(product)[2:].zfill(128)}")
 
     #return z_values
     #return P_theory, product
@@ -479,6 +479,10 @@ if __name__ == "__main__":
         (
             0x0123456789ABCDEF_0011223344556677_8899AABBCCDDEEFF_FFEEDDCCBBAA9988,
             0xF0F1F2F3F4F5F6F7_0807060504030201_1020304050607080_90A0B0C0D0E0F000
+        ),
+        (
+            0x9132b63ef16287e4_e9c349e03602f8ac_10f1bc81448aaa9e_66b2bc5b50c187fc,
+            0xe27a984d654821d0_7fcd9eb1a7cad415_366eb16f508ebad7_b7c93acfe059a0ee
         )
     ]
     

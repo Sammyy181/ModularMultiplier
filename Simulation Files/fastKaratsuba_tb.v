@@ -36,8 +36,8 @@ module fastKaratsuba_tb;
     integer i;
 
     // Predefined, unrelated 256-bit stimuli
-    reg [255:0] X_vec [0:9];
-    reg [255:0] Y_vec [0:9];
+    reg [255:0] X_vec [0:10];
+    reg [255:0] Y_vec [0:10];
 
     initial begin
         // Completely different 256-bit values
@@ -71,6 +71,9 @@ module fastKaratsuba_tb;
         X_vec[9] = 256'h0123456789ABCDEF_0011223344556677_8899AABBCCDDEEFF_FFEEDDCCBBAA9988;
         Y_vec[9] = 256'hF0F1F2F3F4F5F6F7_0807060504030201_1020304050607080_90A0B0C0D0E0F000;
 
+        X_vec[10] = 256'h9132b63ef16287e4_e9c349e03602f8ac_10f1bc81448aaa9e_66b2bc5b50c187fc;
+        Y_vec[10] = 256'he27a984d654821d0_7fcd9eb1a7cad415_366eb16f508ebad7_b7c93acfe059a0ee;
+
         // Init
         reset    = 1'b1;
         in_valid = 1'b0;
@@ -85,7 +88,7 @@ module fastKaratsuba_tb;
         in_valid = 1'b1;
 
         // Drive 10 independent vectors, one per cycle
-        for (i = 0; i < 10; i = i + 1) begin
+        for (i = 0; i < 11; i = i + 1) begin
             @(posedge clock);
             X <= X_vec[i];
             Y <= Y_vec[i];
