@@ -429,3 +429,6 @@ module fastKaratsuba(
     end
 
 endmodule
+
+// X <= 256'h9132b63ef16287e4e9c349e03602f8ac10f1bc81448aaa9e66b2bc5b50c187fc;
+// Y <= 256'he27a984d654821d07fcd9eb1a7cad415366eb16f508ebad7b7c93acfe059a0ee

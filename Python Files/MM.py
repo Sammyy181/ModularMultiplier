@@ -12,7 +12,7 @@ class ModularMultiplier():
     def mult(self, x, y):
         self.P0 = x*y
         #print(f"Length of P0 - {len(bin(self.P0)) - 2}")
-        #print(f"Multiplication value - {hex(self.P0)}")
+        print(f"Multiplication value - {hex(self.P0)}")
         
     def get_parts(self, P, Plen, L=0):
         binP = bin(P)[2:]
@@ -62,9 +62,9 @@ class ModularMultiplier():
         C0PH = C0 * P0_H
         
         self.P1 = C0PH + P0_L
-        #print(f"redP = {hex(C0PH)[2:]}")
+        print(f"redP = {hex(C0PH)[2:]}")
 
-        #print(f"Value after first folding - {hex(self.P1)[2:]}")
+        print(f"Value after first folding - {hex(self.P1)[2:]}")
         #print(f"coarseGrainlow = {hex(self.P1)[-64:]}")
 
         foldLow = (C0PH % (2**192)) + (P0_L % (2**192))
@@ -98,7 +98,7 @@ class ModularMultiplier():
             #print(f"Term Number {i+1} - {hex(partTerm)[2:]}")
             self.Pcoarse += partTerm
 
-        #print(f"Pcoarse = {hex(self.Pcoarse)[2:]}")
+        print(f"Pcoarse = {hex(self.Pcoarse)[2:]}")
         #print(f"Check - {hex(self.Pcoarse % self.modulus)}")
 
     
@@ -164,9 +164,9 @@ def main():
         print(f"Iteration No {i}")
         print(f"X in hex: {hex(X)}")
         print(f"Y in hex: {hex(Y)}")
-        print(f"Little Endian X - {le_X}")
+        """print(f"Little Endian X - {le_X}")
         print(f"Little Endian Y - {le_Y}")
-        print(f"Little Endian Combined - {le_X + le_Y}")
+        print(f"Little Endian Combined - {le_X + le_Y}")"""
         calculated_mod = (X*Y) % modulus
         calculated_mod = hex(calculated_mod)
         print(f"Theoretical Q = {calculated_mod[2:]}")
@@ -183,3 +183,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#9132b63ef16287e4e9c349e03602f8ac10f1bc81448aaa9e66b2bc5b50c187fc
+#e27a984d654821d07fcd9eb1a7cad415366eb16f508ebad7b7c93acfe059a0ee
+#707604604a27d079613788cada01a3bd47bb451efc45bc468b44e5d7ec54419a8
+#86afcef4d0c77ff588df64c5bf54e20bb394f12970fd8e054137a90bbec8f1bb5
