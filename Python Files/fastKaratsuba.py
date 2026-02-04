@@ -38,6 +38,15 @@ def extract_bitsM8(hex_str, high, low):
     hex_value = hex_str[start_digit:end_digit]
     return int(hex_value, 16) if hex_value else 0
 
+def extractDiffX(hexX, low, high):
+    return (extract_bitsM8(hexX, low+2, low) - extract_bitsM8(hexX, high+2, high))
+
+def extractDiffY(hexY, low, high):
+    if high == 30:
+        return extract_bitsM8(hexY, 32, 30) - extract_bitsM8(hexY, low+3, low)
+    else:
+        return extract_bitsM8(hexY, high+3, high) - extract_bitsM8(hexY, low+3, low)
+
 def findParts(X: int, Y: int):
     
     product = X * Y
@@ -93,77 +102,204 @@ def findParts(X: int, Y: int):
     Z58 = extract_bitsM8(hexX, 30, 28) * extract_bitsM8(hexY, 32, 30)
     Z60 = extract_bitsM8(hexX, 32, 30) * extract_bitsM8(hexY, 32, 30)
     
-    M6 = (extract_bitsM8(hexX, 2, 0) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 3, 0))
-    M8 = (extract_bitsM8(hexX, 4, 2) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 3, 0))
-    M9 = (extract_bitsM8(hexX, 2, 0) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 6, 3))
-    M10 = (extract_bitsM8(hexX, 6, 4) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 3, 0))
-    M11 = (extract_bitsM8(hexX, 4, 2) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 6, 3))
-    M12 = (extract_bitsM8(hexX, 2, 0) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 3, 0))
-    M13 = (extract_bitsM8(hexX, 6, 4) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 6, 3))
-    M14 = (extract_bitsM8(hexX, 4, 2) - extract_bitsM8(hexX, 16, 14)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 3, 0))
-    M15 = (extract_bitsM8(hexX, 2, 0) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 6, 3))
-    M16 = (extract_bitsM8(hexX, 6, 4) - extract_bitsM8(hexX, 18, 16)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 3, 0))
-    M17 = (extract_bitsM8(hexX, 16, 14) - extract_bitsM8(hexX, 4, 2)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 18, 15))
-    M18_1 = (extract_bitsM8(hexX, 14, 12) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 15, 12))
-    M18_2 = (extract_bitsM8(hexX, 20, 18) - extract_bitsM8(hexX, 2, 0)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 21, 18))
-    M19 = (extract_bitsM8(hexX, 18, 16) - extract_bitsM8(hexX, 6, 4)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 18, 15))
-    M20_1 = (extract_bitsM8(hexX, 16, 14) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 15, 12))
-    M20_2 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 4, 2)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 21, 18))
-    M21_1 = (extract_bitsM8(hexX, 14, 12) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 18, 15))
-    M21_2 = (extract_bitsM8(hexX, 20, 18) - extract_bitsM8(hexX, 2, 0)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 24, 21))
-    M22_1 = (extract_bitsM8(hexX, 18, 16) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 15, 12))
-    M22_2 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 6, 4)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 21, 18))
-    M23_1 = (extract_bitsM8(hexX, 16, 14) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 18, 15))
-    M23_2 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 4, 2)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 24, 21))
-    M24_1 = (extract_bitsM8(hexX, 20, 18) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 21, 18))
-    M24_2 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 2, 0)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 27, 24))
-    M25_1 = (extract_bitsM8(hexX, 18, 16) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 18, 15))
-    M25_2 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 6, 4)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 24, 21))
-    M26_1 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 21, 18))
-    M26_2 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 4, 2)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 27, 24))
-    M27_1 = (extract_bitsM8(hexX, 20, 18) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 24, 21))
-    M27_2 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 2, 0)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 30, 27))
-    M28_1 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 21, 18))
-    M28_2 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 6, 4)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 27, 24))
-    M29_1 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 24, 21))
-    M29_2 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 4, 2)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 30, 27))
-    M30_1 = (extract_bitsM8(hexX, 20, 18) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 21, 18))
-    M30_2 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 27, 24))
-    M30_3 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 2, 0)) * (extract_bitsM8(hexY, 3, 0) - extract_bitsM8(hexY, 32, 30))
-    M31_1 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 24, 21))
-    M31_2 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 6, 4)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 30, 27))
-    M32_1 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 27, 24))
-    M32_2 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 4, 2)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 32, 30))
-    M33_1 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 24, 21))
-    M33_2 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 6, 3) - extract_bitsM8(hexY, 30, 27))
-    M34_1 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 27, 24))
-    M34_2 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 6, 4)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 32, 30))
-    M35_1 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 16, 14)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 24, 21))
-    M35_2 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 30, 27))
-    M36_1 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 27, 24))
-    M36_2 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 8, 6)) * (extract_bitsM8(hexY, 9, 6) - extract_bitsM8(hexY, 32, 30))
-    M37_1 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 18, 16)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 24, 21))
-    M37_2 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 30, 27))
-    M38_1 = (extract_bitsM8(hexX, 22, 20) - extract_bitsM8(hexX, 16, 14)) * (extract_bitsM8(hexY, 21, 18) - extract_bitsM8(hexY, 27, 24))
-    M38_2 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 10, 8)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 32, 30))
-    M39_1 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 20, 18)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 24, 21))
-    M39_2 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 12, 9) - extract_bitsM8(hexY, 30, 27))
-    M40_1 = (extract_bitsM8(hexX, 24, 22) - extract_bitsM8(hexX, 18, 16)) * (extract_bitsM8(hexY, 21, 18) - extract_bitsM8(hexY, 27, 24))
-    M40_2 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 12, 10)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 32, 30))
-    M41 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 16, 14)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 30, 27))
-    M42_1 = (extract_bitsM8(hexX, 26, 24) - extract_bitsM8(hexX, 20, 18)) * (extract_bitsM8(hexY, 21, 18) - extract_bitsM8(hexY, 27, 24))
-    M42_2 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 14, 12)) * (extract_bitsM8(hexY, 15, 12) - extract_bitsM8(hexY, 32, 30))
-    M43 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 18, 16)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 30, 27))
-    M44 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 16, 14)) * (extract_bitsM8(hexY, 21, 18) - extract_bitsM8(hexY, 32, 30))
-    M45 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 20, 18)) * (extract_bitsM8(hexY, 18, 15) - extract_bitsM8(hexY, 30, 27))
-    M46 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 18, 16)) * (extract_bitsM8(hexY, 21, 18) - extract_bitsM8(hexY, 32, 30))
-    M47 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 22, 20)) * (extract_bitsM8(hexY, 24, 21) - extract_bitsM8(hexY, 30, 27))
-    M48 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 20, 18)) * (extract_bitsM8(hexY, 21, 18) - extract_bitsM8(hexY, 32, 30))
-    M49 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 24, 22)) * (extract_bitsM8(hexY, 24, 21) - extract_bitsM8(hexY, 30, 27))
-    M50 = (extract_bitsM8(hexX, 28, 26) - extract_bitsM8(hexX, 22, 20)) * (extract_bitsM8(hexY, 27, 24) - extract_bitsM8(hexY, 32, 30))
-    M51 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 26, 24)) * (extract_bitsM8(hexY, 24, 21) - extract_bitsM8(hexY, 30, 27))
-    M52 = (extract_bitsM8(hexX, 30, 28) - extract_bitsM8(hexX, 24, 22)) * (extract_bitsM8(hexY, 27, 24) - extract_bitsM8(hexY, 32, 30))
-    M54 = (extract_bitsM8(hexX, 32, 30) - extract_bitsM8(hexX, 26, 24)) * (extract_bitsM8(hexY, 27, 24) - extract_bitsM8(hexY, 32, 30))
+    diffX0_6 = extractDiffX(hexX, 0, 6)
+    diffX0_12 = extractDiffX(hexX, 0, 12)
+    diffX0_18 = extractDiffX(hexX, 0, 18)
+    diffX0_24 = extractDiffX(hexX, 0, 24)
+    diffX0_30 = extractDiffX(hexX, 0, 30)
+    diffX2_8 = extractDiffX(hexX, 2, 8)
+    diffX2_14 = extractDiffX(hexX, 2, 14)
+    diffX2_20 = extractDiffX(hexX, 2, 20)
+    diffX2_26 = extractDiffX(hexX, 2, 26)
+    diffX4_10 = extractDiffX(hexX, 4, 10)
+    diffX4_16 = extractDiffX(hexX, 4, 16)
+    diffX4_22 = extractDiffX(hexX, 4, 22)
+    diffX4_28 = extractDiffX(hexX, 4, 28)
+    diffX6_12 = extractDiffX(hexX, 6, 12)
+    diffX6_18 = extractDiffX(hexX, 6, 18)
+    diffX6_24 = extractDiffX(hexX, 6, 24)
+    diffX6_30 = extractDiffX(hexX, 6, 30)
+    diffX8_14 = extractDiffX(hexX, 8, 14)
+    diffX8_20 = extractDiffX(hexX, 8, 20)
+    diffX8_26 = extractDiffX(hexX, 8, 26)
+    diffX10_16 = extractDiffX(hexX, 10, 16)
+    diffX10_22 = extractDiffX(hexX, 10, 22)
+    diffX10_28 = extractDiffX(hexX, 10, 28)
+    diffX12_18 = extractDiffX(hexX, 12, 18)
+    diffX12_24 = extractDiffX(hexX, 12, 24)
+    diffX12_30 = extractDiffX(hexX, 12, 30)
+    diffX14_20 = extractDiffX(hexX, 14, 20)
+    diffX14_26 = extractDiffX(hexX, 14, 26)
+    diffX16_22 = extractDiffX(hexX, 16, 22)
+    diffX16_28 = extractDiffX(hexX, 16, 28)
+    diffX18_24 = extractDiffX(hexX, 18, 24)
+    diffX18_30 = extractDiffX(hexX, 18, 30)
+    diffX20_26 = extractDiffX(hexX, 20, 26)
+    diffX22_28 = extractDiffX(hexX, 22, 28)
+    diffX24_30 = extractDiffX(hexX, 24, 30)
+    
+    diffY6_0 = extractDiffY(hexY, 0, 6)
+    diffY9_3 = extractDiffY(hexY, 3, 9)
+    diffY12_0 = extractDiffY(hexY, 0, 12)
+    diffY12_6 = extractDiffY(hexY, 6, 12)
+    diffY15_3 = extractDiffY(hexY, 3, 15)
+    diffY15_9 = extractDiffY(hexY, 9, 15)
+    diffY18_0 = extractDiffY(hexY, 0, 18)
+    diffY18_6 = extractDiffY(hexY, 6, 18)
+    diffY18_12 = extractDiffY(hexY, 12, 18)
+    diffY21_3 = extractDiffY(hexY, 3, 21)
+    diffY21_9 = extractDiffY(hexY, 9, 21)
+    diffY21_15 = extractDiffY(hexY, 15, 21)
+    diffY24_0 = extractDiffY(hexY, 0, 24)
+    diffY24_6 = extractDiffY(hexY, 6, 24)
+    diffY24_12 = extractDiffY(hexY, 12, 24)
+    diffY24_18 = extractDiffY(hexY, 18, 24)
+    diffY27_3 = extractDiffY(hexY, 3, 27)
+    diffY27_9 = extractDiffY(hexY, 9, 27)
+    diffY27_15 = extractDiffY(hexY, 15, 27)
+    diffY27_21 = extractDiffY(hexY, 21, 27)
+    diffY30_0 = extractDiffY(hexY, 0, 30)
+    diffY30_6 = extractDiffY(hexY, 6, 30)
+    diffY30_12 = extractDiffY(hexY, 12, 30)
+    diffY30_18 = extractDiffY(hexY, 18, 30)
+    diffY30_24 = extractDiffY(hexY, 24, 30)
+    
+    """# Print all diff values
+    print("\nDiff X Values:")
+    print(f"diffX0_6 = {hex(diffX0_6 & ((1 << 256) - 1))}")
+    print(f"diffX2_8 = {hex(diffX2_8 & ((1 << 256) - 1))}")
+    print(f"diffX4_10 = {hex(diffX4_10 & ((1 << 256) - 1))}")
+    print(f"diffX0_12 = {hex(diffX0_12 & ((1 << 256) - 1))}")
+    print(f"diffX2_14 = {hex(diffX2_14 & ((1 << 256) - 1))}")
+    print(f"diffX4_16 = {hex(diffX4_16 & ((1 << 256) - 1))}")
+    print(f"diffX6_12 = {hex(diffX6_12 & ((1 << 256) - 1))}")
+    print(f"diffX0_18 = {hex(diffX0_18 & ((1 << 256) - 1))}")
+    print(f"diffX8_14 = {hex(diffX8_14 & ((1 << 256) - 1))}")
+    print(f"diffX2_20 = {hex(diffX2_20 & ((1 << 256) - 1))}")
+    print(f"diffX10_16 = {hex(diffX10_16 & ((1 << 256) - 1))}")
+    print(f"diffX4_22 = {hex(diffX4_22 & ((1 << 256) - 1))}")
+    print(f"diffX0_24 = {hex(diffX0_24 & ((1 << 256) - 1))}")
+    print(f"diffX6_18 = {hex(diffX6_18 & ((1 << 256) - 1))}")
+    print(f"diffX2_26 = {hex(diffX2_26 & ((1 << 256) - 1))}")
+    print(f"diffX8_20 = {hex(diffX8_20 & ((1 << 256) - 1))}")
+    print(f"diffX4_28 = {hex(diffX4_28 & ((1 << 256) - 1))}")
+    print(f"diffX10_22 = {hex(diffX10_22 & ((1 << 256) - 1))}")
+    print(f"diffX0_30 = {hex(diffX0_30 & ((1 << 256) - 1))}")
+    print(f"diffX6_24 = {hex(diffX6_24 & ((1 << 256) - 1))}")
+    print(f"diffX12_18 = {hex(diffX12_18 & ((1 << 256) - 1))}")
+    print(f"diffX6_30 = {hex(diffX6_30 & ((1 << 256) - 1))}")
+    print(f"diffX14_20 = {hex(diffX14_20 & ((1 << 256) - 1))}")
+    print(f"diffX8_26 = {hex(diffX8_26 & ((1 << 256) - 1))}")
+    print(f"diffX12_24 = {hex(diffX12_24 & ((1 << 256) - 1))}")
+    print(f"diffX16_22 = {hex(diffX16_22 & ((1 << 256) - 1))}")
+    print(f"diffX10_28 = {hex(diffX10_28 & ((1 << 256) - 1))}")
+    print(f"diffX12_30 = {hex(diffX12_30 & ((1 << 256) - 1))}")
+    print(f"diffX18_24 = {hex(diffX18_24 & ((1 << 256) - 1))}")
+    print(f"diffX16_28 = {hex(diffX16_28 & ((1 << 256) - 1))}")
+    print(f"diffX14_26 = {hex(diffX14_26 & ((1 << 256) - 1))}")
+    print(f"diffX18_30 = {hex(diffX18_30 & ((1 << 256) - 1))}")
+    print(f"diffX20_26 = {hex(diffX20_26 & ((1 << 256) - 1))}")
+    print(f"diffX22_28 = {hex(diffX22_28 & ((1 << 256) - 1))}")
+    print(f"diffX24_30 = {hex(diffX24_30 & ((1 << 256) - 1))}")
+    
+    print("\nDiff Y Values:")
+    print(f"diffY6_0 = {hex(diffY6_0 & ((1 << 256) - 1))}")
+    print(f"diffY9_3 = {hex(diffY9_3 & ((1 << 256) - 1))}")
+    print(f"diffY12_0 = {hex(diffY12_0 & ((1 << 256) - 1))}")
+    print(f"diffY12_6 = {hex(diffY12_6 & ((1 << 256) - 1))}")
+    print(f"diffY15_3 = {hex(diffY15_3 & ((1 << 256) - 1))}")
+    print(f"diffY15_9 = {hex(diffY15_9 & ((1 << 256) - 1))}")
+    print(f"diffY18_0 = {hex(diffY18_0 & ((1 << 256) - 1))}")
+    print(f"diffY18_6 = {hex(diffY18_6 & ((1 << 256) - 1))}")
+    print(f"diffY18_12 = {hex(diffY18_12 & ((1 << 256) - 1))}")
+    print(f"diffY21_3 = {hex(diffY21_3 & ((1 << 256) - 1))}")
+    print(f"diffY21_9 = {hex(diffY21_9 & ((1 << 256) - 1))}")
+    print(f"diffY21_15 = {hex(diffY21_15 & ((1 << 256) - 1))}")
+    print(f"diffY24_0 = {hex(diffY24_0 & ((1 << 256) - 1))}")
+    print(f"diffY24_6 = {hex(diffY24_6 & ((1 << 256) - 1))}")
+    print(f"diffY24_12 = {hex(diffY24_12 & ((1 << 256) - 1))}")
+    print(f"diffY24_18 = {hex(diffY24_18 & ((1 << 256) - 1))}")
+    print(f"diffY27_3 = {hex(diffY27_3 & ((1 << 256) - 1))}")
+    print(f"diffY27_9 = {hex(diffY27_9 & ((1 << 256) - 1))}")
+    print(f"diffY27_15 = {hex(diffY27_15 & ((1 << 256) - 1))}")
+    print(f"diffY27_21 = {hex(diffY27_21 & ((1 << 256) - 1))}")
+    print(f"diffY30_0 = {hex(diffY30_0 & ((1 << 256) - 1))}")
+    print(f"diffY30_6 = {hex(diffY30_6 & ((1 << 256) - 1))}")
+    print(f"diffY30_12 = {hex(diffY30_12 & ((1 << 256) - 1))}")
+    print(f"diffY30_18 = {hex(diffY30_18 & ((1 << 256) - 1))}")
+    print(f"diffY30_24 = {hex(diffY30_24 & ((1 << 256) - 1))}")"""
+    
+    M6 = diffX0_6 * diffY6_0
+    M8 = diffX2_8 * diffY6_0
+    M9 = diffX0_6 * diffY9_3
+    M10 = diffX4_10 * diffY6_0
+    M11 = diffX2_8 * diffY9_3
+    M12 = diffX0_12 * diffY12_0
+    M13 = diffX4_10 * diffY9_3
+    M14 = diffX2_14 * diffY12_0
+    M15 = diffX0_12 * diffY15_3
+    M16 = diffX4_16 * diffY12_0
+    M17 = diffX2_14 * diffY15_3
+    M18_1 = diffX6_12 * diffY12_6
+    M18_2 = diffX0_18 * diffY18_0
+    M19 = diffX4_16 * diffY15_3
+    M20_1 = diffX8_14 * diffY12_6
+    M20_2 = diffX2_20 * diffY18_0
+    M21_1 = diffX6_12 * diffY15_9
+    M21_2 = diffX0_18 * diffY21_3
+    M22_1 = diffX10_16 * diffY12_6
+    M22_2 = diffX4_22 * diffY18_0
+    M23_1 = diffX8_14 * diffY15_9
+    M23_2 = diffX2_20 * diffY21_3
+    M24_1 = diffX6_18 * diffY18_6
+    M24_2 = diffX0_24 * diffY24_0
+    M25_1 = diffX10_16 * diffY15_9
+    M25_2 = diffX4_22 * diffY21_3
+    M26_1 = diffX8_20 * diffY18_6
+    M26_2 = diffX2_26* diffY24_0
+    M27_1 = diffX6_18 * diffY21_9
+    M27_2 = diffX0_24 * diffY27_3
+    M28_1 = diffX10_22 * diffY18_6
+    M28_2 = diffX4_28 * diffY24_0
+    M29_1 = diffX8_20 * diffY21_9
+    M29_2 = diffX2_26* diffY27_3
+    M30_1 = diffX12_18 * diffY18_12
+    M30_2 = diffX6_24 * diffY24_6
+    M30_3 = diffX0_30 * diffY30_0
+    M31_1 = diffX10_22 * diffY21_9
+    M31_2 = diffX4_28 * diffY27_3
+    M32_1 = diffX8_20 * diffY24_12
+    M32_2 = diffX2_26* diffY30_6
+    M33_1 = diffX12_24 * diffY21_9
+    M33_2 = diffX6_30 * diffY27_3
+    M34_1 = diffX10_22 * diffY24_12
+    M34_2 = diffX4_28 * diffY30_6
+    M35_1 = diffX14_20 * diffY21_15
+    M35_2 = diffX8_26 * diffY27_9
+    M36_1 = diffX12_24 * diffY24_12
+    M36_2 = diffX6_30 * diffY30_6
+    M37_1 = diffX16_22 * diffY21_15
+    M37_2 = diffX10_28 * diffY27_9
+    M38_1 = diffX14_20 * diffY24_18
+    M38_2 = diffX8_26 * diffY30_12
+    M39_1 = diffX18_24 * diffY21_15
+    M39_2 = diffX12_30 * diffY27_9
+    M40_1 = diffX16_22 * diffY24_18
+    M40_2 = diffX10_28 * diffY30_12
+    M41 = diffX14_26 * diffY27_15
+    M42_1 = diffX18_24 * diffY24_18
+    M42_2 = diffX12_30 * diffY30_12
+    M43 = diffX16_28 * diffY27_15
+    M44 = diffX14_26 * diffY30_18
+    M45 = diffX18_30 * diffY27_15
+    M46 = diffX16_28 * diffY30_18
+    M47 = diffX20_26 * diffY27_21
+    M48 = diffX18_30 * diffY30_18
+    M49 = diffX22_28 * diffY27_21
+    M50 = diffX20_26 * diffY30_24
+    M51 = diffX24_30 * diffY27_21
+    M52 = diffX22_28 * diffY30_24
+    M54 = diffX24_30 * diffY30_24
     
     # Cycle 2
     S80_0 = Z0 + (Z2 * pow(2, 16)) + (Z3 * pow(2, 24)) + (Z4 * pow(2, 32)) + (Z5 * pow(2, 40))
@@ -260,7 +396,6 @@ def findParts(X: int, Y: int):
     print("\nZ Values:")
     for key in sorted(z_values.keys(), key=lambda x: int(x[1:])):
         print(f"{key} = {z_values[key]}")
-    
     
     m_values = {
         'M6': M6, 'M8': M8, 'M9': M9, 'M10': M10, 'M11': M11, 'M12': M12,
@@ -497,9 +632,8 @@ if __name__ == "__main__":
         
         # Calculate expected product
         expected = X * Y
-        #print(f"Product = 0x{expected:0128X}")
+        # print(f"Product = {hex(expected)[2:]}")
         
         # Also run through the findParts function to verify
         findParts(X, Y)
         print("-" * 80)
-        
