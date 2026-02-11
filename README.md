@@ -29,7 +29,7 @@ Our results and the corresponding comparison to that of the paper's implementati
 | Metric                     | Paper's Implementation        | Our Implementation           |
 |----------------------------|-------------------------------|------------------------------|
 | **FPGA Family**            | Agilex 7                      | Artix 7                      |
-| **Logic Resources**        | 11,505 ALMs/LUTs              | 20,278 LUTs                  |
+| **Logic Resources**        | 11,505 LUTs                   | 20,278 LUTs                  |
 | **Flip-Flops**             | —                             | 14,263 FFs                   |
 | **DSP Blocks**             | 75                            | 211                          |
 | **BRAM / Memory Blocks**   | 105 M20Ks                     | 68 BRAMs                     |
