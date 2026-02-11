@@ -91,19 +91,19 @@ module topModule(
 	// BRAM For Coarse Grain Reduction
     blk_mem_gen_0  BRAM0 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[264:256]),.dina(256'b0),.douta(CG1)); 
     blk_mem_gen_1  BRAM1 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[273:265]),.dina(256'b0),.douta(CG2));
-    blk_mem_gen_3  BRAM2 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[282:274]),.dina(256'b0),.douta(CG3));
-    blk_mem_gen_4  BRAM3 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[291:283]),.dina(256'b0),.douta(CG4));
-    blk_mem_gen_5  BRAM4 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[300:292]),.dina(256'b0),.douta(CG5));
-    blk_mem_gen_6  BRAM5 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[309:301]),.dina(256'b0),.douta(CG6));
-    blk_mem_gen_7  BRAM6 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[318:310]),.dina(256'b0),.douta(CG7));
-    blk_mem_gen_8  BRAM7 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[327:319]),.dina(256'b0),.douta(CG8));
-    blk_mem_gen_9  BRAM8 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[336:328]),.dina(256'b0),.douta(CG9));
-    blk_mem_gen_10 BRAM9 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[345:337]),.dina(256'b0),.douta(CG10));
-    blk_mem_gen_11 BRAM10(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[354:346]),.dina(256'b0),.douta(CG11));
-    blk_mem_gen_12 BRAM11(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[363:355]),.dina(256'b0),.douta(CG12));
-    blk_mem_gen_13 BRAM12(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[372:364]),.dina(256'b0),.douta(CG13));
-    blk_mem_gen_14 BRAM13(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[381:373]),.dina(256'b0),.douta(CG14));
-    blk_mem_gen_15 BRAM14(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[384:382]),.dina(256'b0),.douta(CG15));
+    blk_mem_gen_2  BRAM2 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[282:274]),.dina(256'b0),.douta(CG3));
+    blk_mem_gen_3  BRAM3 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[291:283]),.dina(256'b0),.douta(CG4));
+    blk_mem_gen_4  BRAM4 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[300:292]),.dina(256'b0),.douta(CG5));
+    blk_mem_gen_5  BRAM5 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[309:301]),.dina(256'b0),.douta(CG6));
+    blk_mem_gen_6  BRAM6 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[318:310]),.dina(256'b0),.douta(CG7));
+    blk_mem_gen_7  BRAM7 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[327:319]),.dina(256'b0),.douta(CG8));
+    blk_mem_gen_8  BRAM8 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[336:328]),.dina(256'b0),.douta(CG9));
+    blk_mem_gen_9  BRAM9 (.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[345:337]),.dina(256'b0),.douta(CG10));
+    blk_mem_gen_10 BRAM10(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[354:346]),.dina(256'b0),.douta(CG11));
+    blk_mem_gen_11 BRAM11(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[363:355]),.dina(256'b0),.douta(CG12));
+    blk_mem_gen_12 BRAM12(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[372:364]),.dina(256'b0),.douta(CG13));
+    blk_mem_gen_13 BRAM13(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[381:373]),.dina(256'b0),.douta(CG14));
+    blk_mem_gen_14 BRAM14(.clka(clock),.ena(valid_S18),.wea(1'b0),.addra(rOut_S18[384:382]),.dina(256'b0),.douta(CG15));
     
     // Cycle 20
     reg [255:0] coarseGrainLow_S20;
@@ -130,7 +130,7 @@ module topModule(
     reg valid_S25;
     
     wire [259:0] MK1, MK2;
-    blk_mem_gen_2 FG1(.clka(clock),.ena(valid_S24),.wea(1'b0),.addra(coarseGrainSum_S24[259:255]),.dina(260'b0),.douta(MK1));
+    blk_mem_gen_15 FG1(.clka(clock),.ena(valid_S24),.wea(1'b0),.addra(coarseGrainSum_S24[259:255]),.dina(260'b0),.douta(MK1));
 	blk_mem_gen_16 FG2(.clka(clock),.ena(valid_S24),.wea(1'b0),.addra(coarseGrainSum_S24[259:255]),.dina(260'b0),.douta(MK2));
     
     // Cycle 26
@@ -149,6 +149,26 @@ module topModule(
     always @(posedge clock) begin
 		if(reset) begin
 			Q <= 256'b0;
+			valid_S9 <= 1'b0;
+			valid_S10 <= 1'b0;
+			valid_S11 <= 1'b0;
+			valid_S12 <= 1'b0;
+			valid_S13 <= 1'b0;
+			valid_S14 <= 1'b0;
+			valid_S15 <= 1'b0;
+			valid_S16 <= 1'b0;
+			valid_S17 <= 1'b0;
+			valid_S18 <= 1'b0;
+			valid_S19 <= 1'b0;
+			valid_S20 <= 1'b0;
+			valid_S21 <= 1'b0;
+			valid_S22 <= 1'b0;
+			valid_S23 <= 1'b0;
+			valid_S24 <= 1'b0;
+			valid_S25 <= 1'b0;
+			valid_S26 <= 1'b0;
+			valid_S27 <= 1'b0;
+			valid_S28 <= 1'b0;
 			out_valid <= 1'b0;
     	end
     	else begin

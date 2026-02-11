@@ -31,13 +31,13 @@ module fastKaratsuba(
 );
 
     // Cycle 1
-    reg [39:0] Z0_S1, Z2_S1, Z3_S1, Z4_S1, Z5_S1, Z7_S1, Z8_S1, Z9_S1,
+    (* use_dsp = "yes" *) reg [39:0] Z0_S1, Z2_S1, Z3_S1, Z4_S1, Z5_S1, Z7_S1, Z8_S1, Z9_S1,
                 Z10_S1, Z12_S1, Z14_S1, Z15_S1, Z16_S1, Z17_S1, Z19_S1,
                 Z20_S1, Z21_S1, Z22_S1, Z24_S1, Z26_S1, Z27_S1, Z28_S1, Z29_S1,
                 Z31_S1, Z32_S1, Z33_S1, Z34_S1, Z36_S1, Z38_S1, Z39_S1, Z40_S1,
                 Z41_S1, Z43_S1, Z44_S1, Z45_S1, Z46_S1, Z48_S1,
                 Z50_S1, Z51_S1, Z52_S1, Z53_S1, Z55_S1, Z57_S1;
-    reg [31:0] Z56_S1, Z58_S1, Z60_S1;
+    (* use_dsp = "yes" *) reg [31:0] Z56_S1, Z58_S1, Z60_S1;
 
     reg [17:0] diffX0_6S1, diffX2_8S1, diffX4_10S1, diffX0_12S1, diffX2_14S1, diffX4_16S1, diffX6_12S1, diffX0_18S1, diffX8_14S1, 
                 diffX2_20S1, diffX10_16S1, diffX4_22S1, diffX0_24S1, diffX6_18S1, diffX2_26S1, diffX8_20S1, diffX4_28S1, diffX10_22S1,
@@ -69,7 +69,7 @@ module fastKaratsuba(
     wire [39:0] Z58_S2_sh = Z58_S2 << 8;
     wire [55:0] Z60_S2_sh = Z60_S2 << 24;
 
-    reg [40:0] M6_S2, M8_S2, M9_S2, M10_S2, M11_S2, M12_S2, M13_S2, M14_S2, M15_S2, M16_S2, M17_S2, M18_0S2, M18_1S2, M19_S2,
+    (* use_dsp = "yes" *) reg [40:0] M6_S2, M8_S2, M9_S2, M10_S2, M11_S2, M12_S2, M13_S2, M14_S2, M15_S2, M16_S2, M17_S2, M18_0S2, M18_1S2, M19_S2,
                 M20_0S2, M20_1S2, M21_0S2, M21_1S2, M22_0S2, M22_1S2, M23_0S2, M23_1S2, M24_0S2, M24_1S2, M25_0S2, M25_1S2,
                 M26_0S2, M26_1S2, M27_0S2, M27_1S2, M28_0S2, M28_1S2, M29_0S2, M29_1S2, M30_0S2, M30_1S2, M30_2S2, M31_0S2,
                 M31_1S2, M32_0S2, M32_1S2, M33_0S2, M33_1S2, M34_0S2, M34_1S2, M35_0S2, M35_1S2, M36_0S2, M36_1S2, M37_0S2,

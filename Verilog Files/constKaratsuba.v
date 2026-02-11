@@ -35,10 +35,10 @@ module constKaratsuba(
 
     // Cycle 1
 
-    reg [39:0] Z0_S1, Z2_S1, Z3_S1, Z4_S1, Z5_S1, Z7_S1, Z12_S1, Z14_S1, Z15_0S1, Z15_1S1, Z15_2S1, Z16_0S1, Z16_1S1, Z17_0S1, Z17_1S1, Z17_2S1, 
+    (* use_dsp = "yes" *) reg [39:0] Z0_S1, Z2_S1, Z3_S1, Z4_S1, Z5_S1, Z7_S1, Z12_S1, Z14_S1, Z15_0S1, Z15_1S1, Z15_2S1, Z16_0S1, Z16_1S1, Z17_0S1, Z17_1S1, Z17_2S1, 
                 Z18_S1, Z19_0S1, Z19_1S1, Z20_S1, Z21_0S1, Z21_1S1, Z21_2S1, Z22_0S1, Z22_1S1, Z23_0S1, Z23_1S1, Z23_2S1, Z24_S1, Z25_0S1,
                 Z25_1S1, Z26_S1, Z27_S1, Z28_0S1, Z28_1S1, Z29_S1, Z30_S1, Z32_S1, Z37_S1, Z39_S1, Z41_S1;
-    reg [31:0] Z40_S1, Z42_S1, Z44_S1;
+    (* use_dsp = "yes" *) reg [31:0] Z40_S1, Z42_S1, Z44_S1;
 
     reg [24:0] diffX6_0S1, diffX9_3S1, diffX12_0S1, diffX12_6S1, diffX24_18S1, diffX27_15S1, diffX30_18S1, diffX27_21S1, diffX30_24S1;
     reg [16:0] diffY0_6S1, diffY2_8S1, diffY4_10S1, diffY0_12S1, diffY2_14S1, diffY6_12S1, diffY8_14S1;
@@ -52,7 +52,7 @@ module constKaratsuba(
                 Z25_1S2, Z26_S2, Z27_S2, Z28_0S2, Z28_1S2, Z29_S2, Z30_S2, Z32_S2, Z37_S2, Z39_S2, Z41_S2;
     reg [31:0] Z40_S2, Z42_S2, Z44_S2;
 
-    reg [40:0] M6_S2, M8_S2, M9_S2, M10_S2, M11_S2, M12_S2, M13_S2, M14_S2, M18_S2, M20_S2, M24_S2, M26_S2, M27_S2, M29_S2, M30_S2, M31_S2,
+    (* use_dsp = "yes" *) reg [40:0] M6_S2, M8_S2, M9_S2, M10_S2, M11_S2, M12_S2, M13_S2, M14_S2, M18_S2, M20_S2, M24_S2, M26_S2, M27_S2, M29_S2, M30_S2, M31_S2,
                 M32_S2, M33_S2, M34_S2, M35_S2, M36_S2, M38_S2;
 
     wire [55:0] Z2_S2_sh = Z2_S2 << 16;
@@ -194,6 +194,7 @@ module constKaratsuba(
             S5_valid <= 1'b0;
             S6_valid <= 1'b0;
             S7_valid <= 1'b0;
+            out_valid <= 1'b0;
         end
         else begin
 
