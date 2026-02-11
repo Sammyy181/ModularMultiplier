@@ -1,5 +1,5 @@
 # ModularMultiplier
-256-bit Implementation of the Paper "FPGA Modular Multipliers using Hybrid Reduction Techniques" using Xilinx Vivado
+256-bit Implementation of the Paper "FPGA Modular Multipliers using Hybrid Reduction Techniques" with architectural differences in Karatsuba Multiplication style, using Xilinx Vivado
 
 Prototyping and Testing done on a Nexys4 DDR FPGA board (Artix-7 FPGA).
 
@@ -16,20 +16,24 @@ This operation is being done via the usage of the following steps:
 - Coarse Grain Reduction
 - Fine Grain Reduction
 
-The exact details of these steps can be seen in the paper based on which implementation has been done. The design is perfectly pipelined.
-
-Specifics:
-
-- Clock Frequency - 100MHz
-- Throughput - 25.6 GB/s
-- Latency (Cycles) - 36
-
 The architecture implemented here was as shown below:
 
 ![Microarchitecture of Modular Multiplier](Images/AlgoDiagram.jpeg)
 
-The Karatsuba Multiplier had the following structure:
+The Karatsuba Multiplier was inspired by FloPoCo, specifically for the usage of Rectangular Karatsuba Multipliers to account for 25x18 DSP48E1 blocks in Nexys4 DDR. 
 
-![Karatsuba Multiplier Structure](Images/Karatsuba_Multiplier.jpeg)
+## Implementation Comparison
 
+Our results and the corresponding comparison to that of the paper's implementation on state-of-the-art FPGA can be seen below:
+
+| Metric                     | Paper's Implementation        | Our Implementation           |
+|----------------------------|-------------------------------|------------------------------|
+| **FPGA Family**            | Agilex 7                      | Artix 7                      |
+| **Logic Resources**        | 11,505 ALMs/LUTs              | 20,278 LUTs                  |
+| **Flip-Flops**             | —                             | 14,263 FFs                   |
+| **DSP Blocks**             | 75                            | 211                          |
+| **BRAM / Memory Blocks**   | 105 M20Ks                     | 68 BRAMs                     |
+| **Latency**                | 57 cycles                     | 28 cycles                    |
+| **FMax (Achieved)**        | 804 MHz                       | 110 MHz                      |
+| **FMax (Operational)**     | 600 MHz                       | 100 MHz                      |
 
