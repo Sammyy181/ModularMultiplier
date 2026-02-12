@@ -20,7 +20,9 @@ The architecture implemented here was as shown below:
 
 ![Microarchitecture of Modular Multiplier](Images/AlgoDiagram.jpeg)
 
-The Karatsuba Multiplier was inspired by FloPoCo, specifically for the usage of Rectangular Karatsuba Multipliers to account for 25x18 DSP48E1 blocks in Nexys4 DDR. 
+The Karatsuba Multiplier was inspired by FloPoCo, specifically for the usage of Rectangular Karatsuba Multipliers to account for 25x18 DSP48E1 blocks in Nexys4 DDR. The tiling was done as shown below:
+
+![Tiling of Karatsuba 25x18 blocks](Images/KaratsubaTiling.png)
 
 ## Implementation Comparison
 
@@ -29,7 +31,7 @@ Our results and the corresponding comparison to that of the paper's implementati
 | Metric                     | Paper's Implementation        | Our Implementation           |
 |----------------------------|-------------------------------|------------------------------|
 | **FPGA Family**            | Agilex 7                      | Artix 7                      |
-| **Logic Resources**        | 11,505 LUTs                   | 20,278 LUTs                  |
+| **Logic Resources**        | 11,505 ALMs                   | 20,278 LUTs                  |
 | **Flip-Flops**             | —                             | 14,263 FFs                   |
 | **DSP Blocks**             | 75                            | 211                          |
 | **BRAM / Memory Blocks**   | 105 M20Ks                     | 68 BRAMs                     |
