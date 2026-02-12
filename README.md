@@ -37,5 +37,5 @@ Our results and the corresponding comparison to that of the paper's implementati
 | **BRAM / Memory Blocks**   | 105 M20Ks                     | 68 BRAMs                     |
 | **Latency**                | 57 cycles                     | 28 cycles                    |
 | **FMax (Achieved)**        | 804 MHz                       | 110 MHz                      |
-| **FMax (Operational)**     | 600 MHz                       | 100 MHz                      |
+| **Maximum Operational Frequency of FPGA** | 600 MHz                       | 100 MHz                      |
 
