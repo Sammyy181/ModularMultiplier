@@ -31,13 +31,13 @@ module fastKaratsuba(
 );
 
     // Cycle 1
-    (* use_dsp = "yes" *) reg [39:0] Z0_S1, Z2_S1, Z3_S1, Z4_S1, Z5_S1, Z7_S1, Z8_S1, Z9_S1,
-                Z10_S1, Z12_S1, Z14_S1, Z15_S1, Z16_S1, Z17_S1, Z19_S1,
-                Z20_S1, Z21_S1, Z22_S1, Z24_S1, Z26_S1, Z27_S1, Z28_S1, Z29_S1,
-                Z31_S1, Z32_S1, Z33_S1, Z34_S1, Z36_S1, Z38_S1, Z39_S1, Z40_S1,
-                Z41_S1, Z43_S1, Z44_S1, Z45_S1, Z46_S1, Z48_S1,
-                Z50_S1, Z51_S1, Z52_S1, Z53_S1, Z55_S1, Z57_S1;
-    (* use_dsp = "yes" *) reg [31:0] Z56_S1, Z58_S1, Z60_S1;
+    (* use_dsp = "yes" *) reg [39:0] Z0_S1, Z2_S1, Z3_S1, Z4_S1, Z5_S1, Z7_S1, Z8_0S1, Z8_1S1, Z9_0S1, Z9_1S1,
+                Z10_0S1, Z10_1S1, Z12_S1, Z14_S1, Z15_S1, Z16_S1, Z17_S1, Z19_S1,
+                Z20_0S1, Z20_1S1, Z21_0S1, Z21_1S1, Z22_0S1, Z22_1S1, Z24_S1, Z26_S1, Z27_S1, Z28_S1, Z29_S1,
+                Z31_S1, Z32_S1, Z33_S1, Z34_S1, Z36_S1, Z38_0S1, Z38_1S1, Z39_0S1, Z39_1S1, Z40_0S1, Z40_1S1, 
+                Z41_S1, Z43_S1, Z44_S1, Z45_S1, Z46_S1, Z48_S1, Z50_0S1,
+                Z51_0S1, Z51_1S1, Z52_0S1, Z53_S1, Z55_S1, Z57_S1;
+    (* use_dsp = "yes" *) reg [31:0] Z50_1S1, Z52_1S1, Z56_S1, Z58_S1, Z60_S1;
 
     reg [17:0] diffX0_6S1, diffX2_8S1, diffX4_10S1, diffX0_12S1, diffX2_14S1, diffX4_16S1, diffX6_12S1, diffX0_18S1, diffX8_14S1, 
                 diffX2_20S1, diffX10_16S1, diffX4_22S1, diffX0_24S1, diffX6_18S1, diffX2_26S1, diffX8_20S1, diffX4_28S1, diffX10_22S1,
@@ -59,6 +59,8 @@ module fastKaratsuba(
                 Z50_S2, Z51_S2, Z52_S2, Z53_S2, Z55_S2, Z57_S2;
     reg [31:0] Z56_S2, Z58_S2, Z60_S2;
 
+    reg [40:0] C8_S2, C9_S2, C10_S2, C20_S2, C21_S2, C22_S2, C38_S2, C39_S2, C40_S2, C50_S2, C51_S2, C52_S2;
+
     wire [55:0] Z2_S2_sh = Z2_S2 << 16;
     wire [63:0] Z3_S2_sh = Z3_S2 << 24;
     wire [71:0] Z4_S2_sh = Z4_S2 << 32;
@@ -69,25 +71,26 @@ module fastKaratsuba(
     wire [39:0] Z58_S2_sh = Z58_S2 << 8;
     wire [55:0] Z60_S2_sh = Z60_S2 << 24;
 
-    (* use_dsp = "yes" *) reg [40:0] M6_S2, M8_S2, M9_S2, M10_S2, M11_S2, M12_S2, M13_S2, M14_S2, M15_S2, M16_S2, M17_S2, M18_0S2, M18_1S2, M19_S2,
-                M20_0S2, M20_1S2, M21_0S2, M21_1S2, M22_0S2, M22_1S2, M23_0S2, M23_1S2, M24_0S2, M24_1S2, M25_0S2, M25_1S2,
+    wire [56:0] C8_S2_sh = C8_S2 << 16;
+    wire [48:0] C10_S2_sh = C10_S2 << 8;
+    wire [48:0] C51_S2_sh = C51_S2 << 8;
+
+    (* use_dsp = "yes" *) reg [40:0] M6_S2, M11_S2, M12_S2, M13_S2, M14_S2, M15_S2, M16_S2, M17_S2, M18_0S2, M18_1S2, M19_S2,
+                M20_S2, M21_S2, M22_S2, M23_0S2, M23_1S2, M24_0S2, M24_1S2, M25_0S2, M25_1S2,
                 M26_0S2, M26_1S2, M27_0S2, M27_1S2, M28_0S2, M28_1S2, M29_0S2, M29_1S2, M30_0S2, M30_1S2, M30_2S2, M31_0S2,
                 M31_1S2, M32_0S2, M32_1S2, M33_0S2, M33_1S2, M34_0S2, M34_1S2, M35_0S2, M35_1S2, M36_0S2, M36_1S2, M37_0S2,
-                M37_1S2, M38_0S2, M38_1S2, M39_0S2, M39_1S2, M40_0S2, M40_1S2, M41_S2, M42_0S2, M42_1S2, M43_S2, M44_S2, M45_S2,
-                M46_S2, M47_S2, M48_S2, M49_S2, M50_S2, M51_S2, M52_S2, M54_S2; 
+                M37_1S2, M38_S2, M39_S2, M40_S2, M41_S2, M42_0S2, M42_1S2, M43_S2, M44_S2, M45_S2,
+                M46_S2, M47_S2, M48_S2, M49_S2, M54_S2; 
 
     reg S2_valid;
 
     // Cycle 3
-    wire [40:0] Z6_S3, Z8_S3, Z9_S3, Z10_S3, Z11_S3, Z13_S3, Z18_0S3, Z18_1S3, Z42_0S3, Z42_1S3, Z47_S3, Z49_S3, Z50_S3, Z51_S3, Z52_S3, Z54_S3;
+    wire [40:0] Z6_S3, Z11_S3, Z13_S3, Z18_0S3, Z18_1S3, Z42_0S3, Z42_1S3, Z47_S3, Z49_S3, Z50_S3, Z51_S3, Z52_S3, Z54_S3;
     wire [41:0] Z12_S3, Z14_S3, Z15_S3, Z16_S3, Z17_S3, Z19_S3, Z41_S3, Z43_S3, Z44_S3, Z45_S3, Z46_S3, Z48_S3;
     wire [42:0] Z20_S3, Z21_S3, Z22_S3, Z23_S3, Z24_S3, Z25_S3, Z26_S3, Z27_S3, Z28_S3, Z29_S3, Z30_S3, Z31_S3, Z32_S3, Z33_S3, Z34_S3, Z35_S3, Z36_S3, Z37_S3, Z38_S3, 
                 Z39_S3, Z40_S3;
 
     assign Z6_S3 = $signed(M6_S2) + $signed({1'b0, Z0_S2}) + $signed({1'b0, Z12_S2});
-    assign Z8_S3 = $signed(M8_S2) + $signed({1'b0, Z2_S2}) + $signed({1'b0, Z14_S2});
-    assign Z9_S3 = $signed(M9_S2) + $signed({1'b0, Z3_S2}) + $signed({1'b0, Z15_S2});
-    assign Z10_S3 = $signed(M10_S2) + $signed({1'b0, Z4_S2}) + $signed({1'b0, Z16_S2});
     assign Z11_S3 = $signed(M11_S2) + $signed({1'b0, Z5_S2}) + $signed({1'b0, Z17_S2});
     assign Z12_S3 = $signed(M12_S2) + $signed({1'b0, Z12_S2}) + $signed({1'b0, Z0_S2}) + $signed({1'b0, Z24_S2});
     assign Z13_S3 = $signed(M13_S2) + $signed({1'b0, Z7_S2}) + $signed({1'b0, Z19_S2});
@@ -98,9 +101,9 @@ module fastKaratsuba(
     assign Z18_0S3 = $signed(M18_0S2) + $signed({1'b0, Z12_S2}) + $signed({1'b0, Z24_S2});
     assign Z18_1S3 = $signed(M18_1S2) + $signed({1'b0, Z0_S2}) + $signed({1'b0, Z36_S2});
     assign Z19_S3 = $signed(M19_S2) + $signed({1'b0, Z19_S2}) + $signed({1'b0, Z7_S2}) + $signed({1'b0, Z31_S2});
-    assign Z20_S3 = $signed(M20_0S2) + $signed(M20_1S2) + $signed({1'b0, Z14_S2}) + $signed({1'b0, Z26_S2}) + $signed({1'b0, Z2_S2}) + $signed({1'b0, Z38_S2});
-    assign Z21_S3 = $signed(M21_0S2) + $signed(M21_1S2) + $signed({1'b0, Z15_S2}) + $signed({1'b0, Z27_S2}) + $signed({1'b0, Z3_S2}) + $signed({1'b0, Z39_S2});
-    assign Z22_S3 = $signed(M22_0S2) + $signed(M22_1S2) + $signed({1'b0, Z16_S2}) + $signed({1'b0, Z28_S2}) + $signed({1'b0, Z4_S2}) + $signed({1'b0, Z40_S2});
+    assign Z20_S3 = $signed({1'b0, C20_S2}) + $signed(M20_S2) + $signed({1'b0, Z2_S2}) + $signed({1'b0, Z38_S2});
+    assign Z21_S3 = $signed({1'b0, C21_S2}) + $signed(M21_S2) + $signed({1'b0, Z3_S2}) + $signed({1'b0, Z39_S2});
+    assign Z22_S3 = $signed({1'b0, C22_S2}) + $signed(M22_S2) + $signed({1'b0, Z4_S2}) + $signed({1'b0, Z40_S2});
     assign Z23_S3 = $signed(M23_0S2) + $signed(M23_1S2) + $signed({1'b0, Z17_S2}) + $signed({1'b0, Z29_S2}) + $signed({1'b0, Z5_S2}) + $signed({1'b0, Z41_S2});
     assign Z24_S3 = $signed(M24_0S2) + $signed(M24_1S2) + $signed({1'b0, Z24_S2}) + $signed({1'b0, Z12_S2}) + $signed({1'b0, Z36_S2}) + $signed({1'b0, Z0_S2}) + $signed({1'b0, Z48_S2});
     assign Z25_S3 = $signed(M25_0S2) + $signed(M25_1S2) + $signed({1'b0, Z19_S2}) + $signed({1'b0, Z31_S2}) + $signed({1'b0, Z7_S2}) + $signed({1'b0, Z43_S2});
@@ -116,9 +119,9 @@ module fastKaratsuba(
     assign Z35_S3 = $signed(M35_0S2) + $signed(M35_1S2) + $signed({1'b0, Z29_S2}) + $signed({1'b0, Z41_S2}) + $signed({1'b0, Z17_S2}) + $signed({1'b0, Z53_S2});
     assign Z36_S3 = $signed(M36_0S2) + $signed(M36_1S2) + $signed({1'b0, Z36_S2}) + $signed({1'b0, Z12_S2}) + $signed({1'b0, Z24_S2}) + $signed({1'b0, Z48_S2}) + $signed({1'b0, Z60_S2});
     assign Z37_S3 = $signed(M37_0S2) + $signed(M37_1S2) + $signed({1'b0, Z31_S2}) + $signed({1'b0, Z43_S2}) + $signed({1'b0, Z19_S2}) + $signed({1'b0, Z55_S2});
-    assign Z38_S3 = $signed(M38_0S2) + $signed(M38_1S2) + $signed({1'b0, Z32_S2}) + $signed({1'b0, Z44_S2}) + $signed({1'b0, Z20_S2}) + $signed({1'b0, Z56_S2});
-    assign Z39_S3 = $signed(M39_0S2) + $signed(M39_1S2) + $signed({1'b0, Z33_S2}) + $signed({1'b0, Z45_S2}) + $signed({1'b0, Z21_S2}) + $signed({1'b0, Z57_S2});
-    assign Z40_S3 = $signed(M40_0S2) + $signed(M40_1S2) + $signed({1'b0, Z34_S2}) + $signed({1'b0, Z46_S2}) + $signed({1'b0, Z22_S2}) + $signed({1'b0, Z58_S2});
+    assign Z38_S3 = $signed({1'b0, C38_S2}) + $signed(M38_S2) + $signed({1'b0, Z20_S2}) + $signed({1'b0, Z56_S2});
+    assign Z39_S3 = $signed({1'b0, C39_S2}) + $signed(M39_S2) + $signed({1'b0, Z21_S2}) + $signed({1'b0, Z57_S2});
+    assign Z40_S3 = $signed({1'b0, C40_S2}) + $signed(M40_S2) + $signed({1'b0, Z22_S2}) + $signed({1'b0, Z58_S2});
     assign Z41_S3 = $signed(M41_S2) + $signed({1'b0, Z41_S2}) + $signed({1'b0, Z29_S2}) + $signed({1'b0, Z53_S2});
     assign Z42_0S3 = $signed(M42_0S2) + $signed({1'b0, Z36_S2}) + $signed({1'b0, Z48_S2});
     assign Z42_1S3 = $signed(M42_1S2) + $signed({1'b0, Z24_S2}) + $signed({1'b0, Z60_S2});
@@ -129,13 +132,8 @@ module fastKaratsuba(
     assign Z47_S3 = $signed(M47_S2) + $signed({1'b0, Z41_S2}) + $signed({1'b0, Z53_S2}); 
     assign Z48_S3 = $signed(M48_S2) + $signed({1'b0, Z48_S2}) + $signed({1'b0, Z36_S2}) + $signed({1'b0, Z60_S2});
     assign Z49_S3 = $signed(M49_S2) + $signed({1'b0, Z43_S2}) + $signed({1'b0, Z55_S2});
-    assign Z50_S3 = $signed(M50_S2) + $signed({1'b0, Z44_S2}) + $signed({1'b0, Z56_S2});
-    assign Z51_S3 = $signed(M51_S2) + $signed({1'b0, Z45_S2}) + $signed({1'b0, Z57_S2});
-    assign Z52_S3 = $signed(M52_S2) + $signed({1'b0, Z46_S2}) + $signed({1'b0, Z58_S2});
     assign Z54_S3 = $signed(M54_S2) + $signed({1'b0, Z48_S2}) + $signed({1'b0, Z60_S2}); 
                 
-    wire [56:0] Z8_S3_sh = Z8_S3 << 16;
-    wire [48:0] Z10_S3_sh = Z10_S3 << 8;
     wire [49:0] Z12_S3_sh = Z12_S3 << 8;
     wire [49:0] Z14_S3_sh = Z14_S3 << 8;
     wire [49:0] Z16_S3_sh = Z16_S3 << 8;
@@ -146,7 +144,6 @@ module fastKaratsuba(
     wire [49:0] Z45_S3_sh = Z45_S3 << 8;
     wire [48:0] Z47_S3_sh = Z47_S3 << 8;
     wire [48:0] Z49_S3_sh = Z49_S3 << 8;
-    wire [48:0] Z51_S3_sh = Z51_S3 << 8;
 
     reg [80:0] S80_0S3;
     reg [57:0] S106_48S3;
@@ -253,18 +250,24 @@ module fastKaratsuba(
             Z4_S1 <= X[47:32] * Y[23:0];
             Z5_S1 <= X[31:16] * Y[47:24];
             Z7_S1 <= X[47:32] * Y[47:24];
-            Z8_S1 <= X[31:16] * Y[71:48];
-            Z9_S1 <= X[63:48] * Y[47:24];
-            Z10_S1 <= X[47:32] * Y[71:48];
+            Z8_0S1 <= X[31:16] * Y[71:48];
+            Z8_1S1 <= X[79:64] * Y[23:0];
+            Z9_0S1 <= X[63:48] * Y[47:24];
+            Z9_1S1 <= X[15:0] * Y[95:72];
+            Z10_0S1 <= X[47:32] * Y[71:48];
+            Z10_1S1 <= X[95:80] * Y[23:0];
             Z12_S1 <= X[63:48] * Y[71:48];
             Z14_S1 <= X[79:64] * Y[71:48];
             Z15_S1 <= X[63:48] * Y[95:72];
             Z16_S1 <= X[95:80] * Y[71:48];
             Z17_S1 <= X[79:64] * Y[95:72];
             Z19_S1 <= X[95:80] * Y[95:72];
-            Z20_S1 <= X[79:64] * Y[119:96];
-            Z21_S1 <= X[111:96] * Y[95:72];
-            Z22_S1 <= X[95:80] * Y[119:96];
+            Z20_0S1 <= X[79:64] * Y[119:96];
+            Z20_1S1 <= X[127:112] * Y[71:48];
+            Z21_0S1 <= X[111:96] * Y[95:72];
+            Z21_1S1 <= X[63:48] * Y[143:120];
+            Z22_0S1 <= X[95:80] * Y[119:96];
+            Z22_1S1 <= X[143:128] * Y[71:48];
             Z24_S1 <= X[111:96] * Y[119:96];
             Z26_S1 <= X[127:112] * Y[119:96];
             Z27_S1 <= X[111:96] * Y[143:120];
@@ -275,18 +278,24 @@ module fastKaratsuba(
             Z33_S1 <= X[159:144] * Y[143:120];
             Z34_S1 <= X[143:128] * Y[167:144];
             Z36_S1 <= X[159:144] * Y[167:144];
-            Z38_S1 <= X[175:160] * Y[167:144];
-            Z39_S1 <= X[159:144] * Y[191:168];
-            Z40_S1 <= X[191:176] * Y[167:144];
+            Z38_0S1 <= X[175:160] * Y[167:144];
+            Z38_1S1 <= X[127:112] * Y[215:192];
+            Z39_0S1 <= X[159:144] * Y[191:168];
+            Z39_1S1 <= X[207:192] * Y[143:120];
+            Z40_0S1 <= X[191:176] * Y[167:144];
+            Z40_1S1 <= X[143:128] * Y[215:192];
             Z41_S1 <= X[175:160] * Y[191:168];
             Z43_S1 <= X[191:176] * Y[191:168];
             Z44_S1 <= X[175:160] * Y[215:192];
             Z45_S1 <= X[207:192] * Y[191:168];
             Z46_S1 <= X[191:176] * Y[215:192];
             Z48_S1 <= X[207:192] * Y[215:192];
-            Z50_S1 <= X[223:208] * Y[215:192];
-            Z51_S1 <= X[207:192] * Y[239:216];
-            Z52_S1 <= X[239:224] * Y[215:192];
+            Z50_0S1 <= X[223:208] * Y[215:192];
+            Z50_1S1 <= X[175:160] * Y[255:240]; // 32 BITS
+            Z51_0S1 <= X[207:192] * Y[239:216];
+            Z51_1S1 <= X[255:240] * Y[191:168];
+            Z52_0S1 <= X[239:224] * Y[215:192];
+            Z52_1S1 <= X[191:176] * Y[255:240]; // 32 BITS
             Z53_S1 <= X[223:208] * Y[239:216];
             Z55_S1 <= X[239:224] * Y[239:216];
             Z56_S1 <= X[223:208] * Y[255:240]; // 32 BITS
@@ -366,18 +375,18 @@ module fastKaratsuba(
             Z4_S2 <= Z4_S1;
             Z5_S2 <= Z5_S1;
             Z7_S2 <= Z7_S1;
-            Z8_S2 <= Z8_S1;
-            Z9_S2 <= Z9_S1;
-            Z10_S2 <= Z10_S1;
+            Z8_S2 <= Z8_0S1;
+            Z9_S2 <= Z9_0S1;
+            Z10_S2 <= Z10_0S1;
             Z12_S2 <= Z12_S1;
             Z14_S2 <= Z14_S1;
             Z15_S2 <= Z15_S1;
             Z16_S2 <= Z16_S1;
             Z17_S2 <= Z17_S1;
             Z19_S2 <= Z19_S1;
-            Z20_S2 <= Z20_S1;
-            Z21_S2 <= Z21_S1;
-            Z22_S2 <= Z22_S1;
+            Z20_S2 <= Z20_0S1;
+            Z21_S2 <= Z21_0S1;
+            Z22_S2 <= Z22_0S1;
             Z24_S2 <= Z24_S1;
             Z26_S2 <= Z26_S1;
             Z27_S2 <= Z27_S1;
@@ -388,18 +397,18 @@ module fastKaratsuba(
             Z33_S2 <= Z33_S1;
             Z34_S2 <= Z34_S1;
             Z36_S2 <= Z36_S1;
-            Z38_S2 <= Z38_S1;
-            Z39_S2 <= Z39_S1;
-            Z40_S2 <= Z40_S1;
+            Z38_S2 <= Z38_0S1;
+            Z39_S2 <= Z39_0S1;
+            Z40_S2 <= Z40_0S1;
             Z41_S2 <= Z41_S1;
             Z43_S2 <= Z43_S1;
             Z44_S2 <= Z44_S1;
             Z45_S2 <= Z45_S1;
             Z46_S2 <= Z46_S1;
             Z48_S2 <= Z48_S1;
-            Z50_S2 <= Z50_S1;
-            Z51_S2 <= Z51_S1;
-            Z52_S2 <= Z52_S1;
+            Z50_S2 <= Z50_0S1;
+            Z51_S2 <= Z51_0S1;
+            Z52_S2 <= Z52_0S1;
             Z53_S2 <= Z53_S1;
             Z55_S2 <= Z55_S1;
             Z56_S2 <= Z56_S1;
@@ -408,9 +417,6 @@ module fastKaratsuba(
             Z60_S2 <= Z60_S1;
 
             M6_S2 <= $signed(diffX0_6S1) * $signed(diffY6_0S1);
-            M8_S2 <= $signed(diffX2_8S1) * $signed(diffY6_0S1);
-            M9_S2 <= $signed(diffX0_6S1) * $signed(diffY9_3S1);
-            M10_S2 <= $signed(diffX4_10S1) * $signed(diffY6_0S1);
             M11_S2 <= $signed(diffX2_8S1) * $signed(diffY9_3S1);
             M12_S2 <= $signed(diffX0_12S1) * $signed(diffY12_0S1);
             M13_S2 <= $signed(diffX4_10S1) * $signed(diffY9_3S1);
@@ -421,12 +427,9 @@ module fastKaratsuba(
             M18_0S2 <= $signed(diffX6_12S1) * $signed(diffY12_6S1);
             M18_1S2 <= $signed(diffX0_18S1) * $signed(diffY18_0S1);
             M19_S2 <= $signed(diffX4_16S1) * $signed(diffY15_3S1);
-            M20_0S2 <= $signed(diffX8_14S1) * $signed(diffY12_6S1);
-            M20_1S2 <= $signed(diffX2_20S1) * $signed(diffY18_0S1);
-            M21_0S2 <= $signed(diffX0_18S1) * $signed(diffY21_3S1);
-            M21_1S2 <= $signed(diffX6_12S1) * $signed(diffY15_9S1);
-            M22_0S2 <= $signed(diffX10_16S1) * $signed(diffY12_6S1);
-            M22_1S2 <= $signed(diffX4_22S1) * $signed(diffY18_0S1);
+            M20_S2 <= $signed(diffX2_20S1) * $signed(diffY18_0S1);
+            M21_S2 <= $signed(diffX0_18S1) * $signed(diffY21_3S1);
+            M22_S2 <= $signed(diffX4_22S1) * $signed(diffY18_0S1);
             M23_0S2 <= $signed(diffX8_14S1) * $signed(diffY15_9S1);
             M23_1S2 <= $signed(diffX2_20S1) * $signed(diffY21_3S1);
             M24_0S2 <= $signed(diffX0_24S1) * $signed(diffY24_0S1);
@@ -458,12 +461,9 @@ module fastKaratsuba(
             M36_1S2 <= $signed(diffX12_24S1) * $signed(diffY24_12S1);
             M37_0S2 <= $signed(diffX16_22S1) * $signed(diffY21_15S1);
             M37_1S2 <= $signed(diffX10_28S1) * $signed(diffY27_9S1);
-            M38_0S2 <= $signed(diffX8_26S1) * $signed(diffY30_12S1);
-            M38_1S2 <= $signed(diffX14_20S1) * $signed(diffY24_18S1);
-            M39_0S2 <= $signed(diffX12_30S1) * $signed(diffY27_9S1);
-            M39_1S2 <= $signed(diffX18_24S1) * $signed(diffY21_15S1);
-            M40_0S2 <= $signed(diffX10_28S1) * $signed(diffY30_12S1);
-            M40_1S2 <= $signed(diffX16_22S1) * $signed(diffY24_18S1);
+            M38_S2 <= $signed(diffX8_26S1) * $signed(diffY30_12S1);
+            M39_S2 <= $signed(diffX12_30S1) * $signed(diffY27_9S1);
+            M40_S2 <= $signed(diffX10_28S1) * $signed(diffY30_12S1);
             M41_S2 <= $signed(diffX14_26S1) * $signed(diffY27_15S1);
             M42_0S2 <= $signed(diffX18_24S1) * $signed(diffY24_18S1);
             M42_1S2 <= $signed(diffX12_30S1) * $signed(diffY30_12S1);
@@ -474,17 +474,27 @@ module fastKaratsuba(
             M47_S2 <= $signed(diffX20_26S1) * $signed(diffY27_21S1);
             M48_S2 <= $signed(diffX18_30S1) * $signed(diffY30_18S1);
             M49_S2 <= $signed(diffX22_28S1) * $signed(diffY27_21S1);
-            M50_S2 <= $signed(diffX20_26S1) * $signed(diffY30_24S1);
-            M51_S2 <= $signed(diffX24_30S1) * $signed(diffY27_21S1);
-            M52_S2 <= $signed(diffX22_28S1) * $signed(diffY30_24S1);
             M54_S2 <= $signed(diffX24_30S1) * $signed(diffY30_24S1);
+
+            C8_S2 <= Z8_0S1 + Z8_1S1;
+            C9_S2 <= Z9_0S1 + Z9_1S1;
+            C10_S2 <= Z10_0S1 + Z10_1S1;
+            C20_S2 <= Z20_0S1 + Z20_1S1;
+            C21_S2 <= Z21_0S1 + Z21_1S1;
+            C22_S2 <= Z22_0S1 + Z22_1S1;
+            C38_S2 <= Z38_0S1 + Z38_1S1;
+            C39_S2 <= Z39_0S1 + Z39_1S1;
+            C40_S2 <= Z40_0S1 + Z40_1S1;
+            C50_S2 <= Z50_0S1 + Z50_1S1;
+            C51_S2 <= Z51_0S1 + Z51_1S1;
+            C52_S2 <= Z52_0S1 + Z52_1S1;
 
             S2_valid <= S1_valid;
             
             // Cycle 3
             S80_0S3 <= {Z5_S2, Z0_S2} + {24'b0, Z2_S2_sh} + {16'b0, Z3_S2_sh} + {8'b0, Z4_S2_sh};
-            S106_48S3 <= {16'b0, Z6_S3} + {9'b0, Z7_S2_sh} + Z8_S3_sh;
-            S122_72S3 <= {8'b0, Z9_S3} + Z10_S3_sh;
+            S106_48S3 <= {16'b0, Z6_S3} + {9'b0, Z7_S2_sh} + C8_S2_sh;
+            S122_72S3 <= {8'b0, C9_S2} + C10_S2_sh;
             S139_88S3 <= {9'b0, Z11_S3} + Z12_S3_sh;
             S155_104S3 <= {9'b0, Z13_S3} + Z14_S3_sh;
             S171_120S3 <= {8'b0, Z15_S3} + Z16_S3_sh;
@@ -516,8 +526,8 @@ module fastKaratsuba(
             S403_352S3 <= {8'b0, Z44_S3} + Z45_S3_sh;
             S418_368S3 <= {7'b0, Z46_S3} + Z47_S3_sh;
             S434_384S3 <= {7'b0, Z48_S3} + Z49_S3_sh;
-            S450_400S3 <= {8'b0, Z50_S3} + Z51_S3_sh;
-            S465_416S3 <= {7'b0, Z52_S3} + Z53_S2_sh;
+            S450_400S3 <= {8'b0, C50_S2} + C51_S2_sh;
+            S465_416S3 <= {7'b0, C52_S2} + Z53_S2_sh;
             S489_432S3 <= {7'b0, Z54_S3} + Z55_S2_sh + Z56_S2_sh;
             S511_456S3 <= {16'b0, Z57_S2} + {16'b0, Z58_S2_sh} + Z60_S2_sh;
 
